@@ -1,0 +1,3101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>艾瑟瑞亞百科 · Aetheria Wiki</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10151a;
+    --bg-panel: #161d22;
+    --bg-panel-2: #1b2329;
+    --line: #2a3339;
+    --ink: #e9e4d6;
+    --ink-dim: #97a29e;
+    --gold: #c9a15c;
+    --gold-soft: rgba(201,161,92,.16);
+    --ember: #d9622b;
+    --lunar: #8fa8c9;
+    --abyss: #a274d1;
+    --bloom: #d68fc9;
+    --trench: #4fb3bf;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Literata',serif;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--gold-soft);}
+
+  #app{display:flex;min-height:100vh;}
+
+  /* ---------- Sidebar ---------- */
+  #sidebar{
+    width:270px;flex:0 0 270px;background:var(--bg-panel);
+    border-right:1px solid var(--line);
+    padding:22px 16px 40px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:0 6px 18px;border-bottom:1px solid var(--line);margin-bottom:16px;}
+  .brand-mark{width:30px;height:30px;flex:0 0 30px;}
+  .brand-title{font-family:'Spectral',serif;font-weight:700;font-size:17px;letter-spacing:.02em;}
+  .brand-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase;}
+
+  #search-box{position:relative;margin-bottom:20px;}
+  #search-input{
+    width:100%;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:6px;
+    color:var(--ink);font-family:'Literata',serif;font-size:13.5px;padding:9px 12px;outline:none;
+  }
+  #search-input:focus{border-color:var(--gold);}
+  #search-results{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-panel-2);
+    border:1px solid var(--line);border-radius:6px;overflow:hidden;z-index:20;display:none;
+    max-height:280px;overflow-y:auto;
+  }
+  #search-results.show{display:block;}
+  .sr-item{padding:8px 12px;font-size:13px;border-bottom:1px solid var(--line);cursor:pointer;}
+  .sr-item:last-child{border-bottom:none;}
+  .sr-item:hover{background:var(--gold-soft);}
+  .sr-item small{display:block;color:var(--ink-dim);font-family:'IBM Plex Mono',monospace;font-size:9.5px;margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
+
+  .nav-group{margin-bottom:4px;}
+  .nav-group-title{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-dim);padding:14px 8px 6px;
+  }
+  .nav-link{
+    display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:5px;font-size:13.5px;
+    color:var(--ink-dim);cursor:pointer;line-height:1.4;
+  }
+  .nav-link:hover{background:var(--bg-panel-2);color:var(--ink);}
+  .nav-link.active{background:var(--gold-soft);color:var(--gold);}
+  .dot{width:7px;height:7px;border-radius:50%;flex:0 0 7px;background:var(--ink-dim);}
+
+  /* ---------- Main ---------- */
+  #main{flex:1;min-width:0;}
+  #topbar{
+    position:sticky;top:0;z-index:10;background:rgba(16,21,26,.85);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);padding:12px 40px;font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;color:var(--ink-dim);letter-spacing:.03em;
+  }
+  #topbar a{color:var(--gold);}
+  #content{max-width:900px;margin:0 auto;padding:44px 40px 100px;}
+
+  .page-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--domain-color,var(--gold));margin-bottom:10px;}
+  h1.page-title{font-family:'Spectral',serif;font-size:38px;font-weight:700;line-height:1.15;margin:0 0 6px;}
+  .page-alt{font-family:'Literata',serif;font-style:italic;color:var(--ink-dim);font-size:15px;margin-bottom:26px;}
+
+  .infobox{
+    float:right;width:280px;margin:0 0 20px 28px;background:var(--bg-panel);border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;
+  }
+  .infobox-head{background:var(--domain-color,var(--gold));color:#10151a;font-family:'Spectral',serif;font-weight:700;font-size:14.5px;padding:10px 14px;}
+  .infobox-row{padding:9px 14px;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .infobox-row:last-child{border-bottom:none;}
+  .infobox-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);margin-bottom:3px;}
+  .infobox-value{line-height:1.5;}
+  .infobox-value a.wl{color:var(--domain-color,var(--gold));border-bottom:1px dotted currentColor;}
+
+  article{font-size:16px;line-height:1.85;color:var(--ink);}
+  article p{margin:0 0 18px;}
+  article h2{font-family:'Spectral',serif;font-size:23px;font-weight:600;margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);clear:none;}
+  article h3{font-family:'Spectral',serif;font-size:18px;font-weight:600;margin:24px 0 10px;color:var(--domain-color,var(--gold));}
+  article ul,article ol{padding-left:22px;margin:0 0 18px;}
+  article li{margin-bottom:7px;}
+  a.wl{color:var(--gold);border-bottom:1px dotted rgba(201,161,92,.5);}
+  a.wl:hover{color:var(--ink);border-color:var(--ink);}
+  .tag{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;
+    padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--ink-dim);margin:2px 6px 2px 0;
+  }
+
+  table.wiki-table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:14px;}
+  table.wiki-table th,table.wiki-table td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  table.wiki-table th{background:var(--bg-panel);font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-dim);}
+
+  blockquote{
+    margin:24px 0;padding:14px 20px;border-left:3px solid var(--domain-color,var(--gold));
+    background:var(--bg-panel);font-style:italic;color:var(--ink-dim);border-radius:0 6px 6px 0;
+  }
+
+  .domain-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:26px 0;clear:both;}
+  .domain-card{
+    background:var(--bg-panel);border:1px solid var(--line);border-radius:8px;padding:16px;cursor:pointer;
+    border-top:3px solid var(--card-color,var(--gold));
+  }
+  .domain-card:hover{background:var(--bg-panel-2);}
+  .domain-card h4{font-family:'Spectral',serif;margin:0 0 6px;font-size:16px;color:var(--card-color,var(--gold));}
+  .domain-card p{margin:0;font-size:12.5px;color:var(--ink-dim);line-height:1.5;}
+
+  #cosmology{width:100%;max-width:560px;display:block;margin:10px auto 30px;}
+  #cosmology .node{cursor:pointer;}
+  #cosmology text{font-family:'Spectral',serif;fill:var(--ink);}
+  #cosmology .node:hover circle{filter:brightness(1.3);}
+  #cosmology .label-sm{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:var(--ink-dim);}
+
+  .see-also{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);}
+  .see-also-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:10px;}
+
+  .timeline{border-left:2px solid var(--line);margin:20px 0 0 6px;padding-left:24px;}
+  .tl-item{position:relative;margin-bottom:26px;}
+  .tl-item::before{content:'';position:absolute;left:-30px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--gold);}
+  .tl-era{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--gold);letter-spacing:.04em;margin-bottom:4px;}
+  .tl-title{font-family:'Spectral',serif;font-weight:600;font-size:17px;margin-bottom:5px;}
+
+  #mobile-toggle{display:none;}
+  @media(max-width:860px){
+    #sidebar{position:fixed;left:-280px;z-index:50;transition:left .2s;box-shadow:0 0 40px rgba(0,0,0,.5);}
+    #sidebar.open{left:0;}
+    #mobile-toggle{
+      display:block;position:fixed;bottom:20px;right:20px;z-index:60;width:48px;height:48px;border-radius:50%;
+      background:var(--gold);color:#10151a;border:none;font-size:20px;cursor:pointer;
+    }
+    #content{padding:30px 20px 100px;}
+    .infobox{float:none;width:100%;margin:0 0 24px;}
+    h1.page-title{font-size:29px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <aside id="sidebar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#c9a15c" stroke-width="1.5"/><path d="M20 8 L20 32 M12 15 L28 25 M28 15 L12 25" stroke="#c9a15c" stroke-width="1.2"/><circle cx="20" cy="20" r="4" fill="#c9a15c"/></svg>
+      <div>
+        <div class="brand-title">艾瑟瑞亞百科</div>
+        <div class="brand-sub">Aetheria Compendium</div>
+      </div>
+    </div>
+
+    <div id="search-box">
+      <input id="search-input" type="text" placeholder="搜尋詞條、種族、地域…">
+      <div id="search-results"></div>
+    </div>
+
+    <nav id="nav-tree"></nav>
+  </aside>
+
+  <button id="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+  <main id="main">
+    <div id="topbar"></div>
+    <div id="content"></div>
+  </main>
+
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const DOMAIN_COLOR = {
+  ember:'var(--ember)', lunar:'var(--lunar)', abyss:'var(--abyss)', bloom:'var(--bloom)', trench:'var(--trench)', null:'var(--gold)'
+};
+
+const PAGES = {
+
+/* ---------------- 總覽 ---------------- */
+home: {
+  title:'艾瑟瑞亞', category:'總覽', domain:null, tags:['總覽','世界樹','宇宙觀'],
+  alt:'Aetheria · 浮空大陸奇幻世界',
+  body:`
+  <p><b>艾瑟瑞亞</b>是一座環繞無盡雲海漂浮的巨大大陸,其存在的根基是中央的<a class="wl" href="#magic-system">魔力循環系統</a>——由世界樹
+  <a class="wl" href="#creature-titan">艾瑟瑞姆</a>吸收五大生態域的原始魔力、加以轉化,再回饋予大陸上的萬千生靈。這是一個高魔力、
+  情慾與生命力被視為魔法根本燃料的世界。</p>
+
+  <h2>宇宙觀</h2>
+  <p>大陸的一切魔力都以世界樹為心臟,呈放射狀連結五大<a class="wl" href="#magic-system">生態域</a>。點選下方圖示可前往各域詞條。</p>
+
+  <svg id="cosmology" viewBox="0 0 560 480">
+    <g stroke="#2a3339" stroke-width="1.4">
+      <line x1="280" y1="240" x2="280" y2="70"/>
+      <line x1="280" y1="240" x2="460" y2="150"/>
+      <line x1="280" y1="240" x2="460" y2="330"/>
+      <line x1="280" y1="240" x2="280" y2="410"/>
+      <line x1="280" y1="240" x2="100" y2="330"/>
+      <line x1="280" y1="240" x2="100" y2="150"/>
+    </g>
+    <g class="node" onclick="location.hash='creature-titan'">
+      <circle cx="280" cy="240" r="34" fill="#c9a15c"/>
+      <text x="280" y="245" font-size="13" text-anchor="middle" font-weight="600">世界樹</text>
+    </g>
+    <g class="node" onclick="location.hash='domain-ember'">
+      <circle cx="280" cy="70" r="26" fill="#d9622b"/>
+      <text x="280" y="75" font-size="11" text-anchor="middle" fill="#10151a" font-weight="600">炙炎</text>
+      <text x="280" y="42" class="label-sm" text-anchor="middle">EMBER PEAKS</text>
+    </g>
+    <g class="node" onclick="location.hash='domain-lunar'">
+      <circle cx="460" cy="150" r="26" fill="#8fa8c9"/>
+      <text x="460" y="155" font-size="11" text-anchor="middle" fill="#10151a" font-weight="600">月影</text>
+      <text x="460" y="120" class="label-sm" text-anchor="middle">LUNAR WOODS</text>
+    </g>
+    <g class="node" onclick="location.hash='domain-abyss'">
+      <circle cx="460" cy="330" r="26" fill="#a274d1"/>
+      <text x="460" y="335" font-size="11" text-anchor="middle" fill="#10151a" font-weight="600">永夜</text>
+      <text x="460" y="365" class="label-sm" text-anchor="middle">ABYSSAL DEPTHS</text>
+    </g>
+    <g class="node" onclick="location.hash='domain-bloom'">
+      <circle cx="280" cy="410" r="26" fill="#d68fc9"/>
+      <text x="280" y="415" font-size="11" text-anchor="middle" fill="#10151a" font-weight="600">晶夢</text>
+      <text x="280" y="445" class="label-sm" text-anchor="middle">CRYSTAL MEADOWS</text>
+    </g>
+    <g class="node" onclick="location.hash='domain-trench'">
+      <circle cx="100" cy="330" r="26" fill="#4fb3bf"/>
+      <text x="100" y="335" font-size="11" text-anchor="middle" fill="#10151a" font-weight="600">深海</text>
+      <text x="100" y="365" class="label-sm" text-anchor="middle">ABYSSAL TRENCHES</text>
+    </g>
+    <g class="node" onclick="location.hash='domain-lunar'">
+      <circle cx="100" cy="150" r="26" fill="#8fa8c9" opacity="0"/>
+    </g>
+  </svg>
+
+  <h2>五大生態域</h2>
+  <div class="domain-cards">
+    <div class="domain-card" style="--card-color:var(--ember)" onclick="location.hash='domain-ember'"><h4>炙炎山脈</h4><p>火山與熔岩,龍女與炎狐的家園。</p></div>
+    <div class="domain-card" style="--card-color:var(--lunar)" onclick="location.hash='domain-lunar'"><h4>月影古林</h4><p>隨月相變色的古木森林,狼女與月光精靈棲居。</p></div>
+    <div class="domain-card" style="--card-color:var(--abyss)" onclick="location.hash='domain-abyss'"><h4>永夜深淵</h4><p>晶石發光的地底洞窟,魅魔與黑暗精靈的領地。</p></div>
+    <div class="domain-card" style="--card-color:var(--bloom)" onclick="location.hash='domain-bloom'"><h4>晶夢花海</h4><p>漂浮的夢幻花島,花精與樹精的故鄉。</p></div>
+    <div class="domain-card" style="--card-color:var(--trench)" onclick="location.hash='domain-trench'"><h4>深海裂隙</h4><p>高壓深海與發光珊瑚宮殿,海妖的疆域。</p></div>
+  </div>
+
+  <h2>快速導覽</h2>
+  <ul>
+    <li><a class="wl" href="#creation-myth">創世神話</a> —— 太初二力、世界樹之夢,以及各族的異本傳說</li>
+    <li><a class="wl" href="#magic-system">魔力循環系統</a> —— 吸收、轉化、分配、淨化、回饋的五階段循環</li>
+    <li><a class="wl" href="#history">歷史大事記</a> —— 從紀元0創世到當前紀元6230新生代</li>
+    <li><a class="wl" href="#migration">跨域遷徙路線</a> —— 四季遷徙與七年一度的世界樹開花季</li>
+    <li><a class="wl" href="#economy">經濟與貿易</a> —— 魔力結晶通貨與五域特產</li>
+    <li><a class="wl" href="#transit-network">大陸交通網絡</a> —— 雲海渡口、根域隧道、天穹古道</li>
+    <li><a class="wl" href="#unclaimed-territories">未歸屬地帶</a> —— 雲隙荒境與影裔殘部盤據的未圖之境</li>
+    <li><a class="wl" href="#appendix-overview">附錄總覽</a> —— 譜系、編年表、曆法、語言、神器等參考工具彙整</li>
+  </ul>
+  `
+},
+
+/* ---------------- 人物與譜系 ---------------- */
+'royal-lineages':{
+  title:'王室譜系', category:'人物與譜系', domain:null, tags:['譜系','君王','王朝','世系'],
+  alt:'Royal Lineages of Aetheria',
+  body:`
+  <p>艾瑟瑞亞並非所有政體都採世襲制,但三大主要王朝——<a class="wl" href="#domain-ember">炙炎山脈</a>的熔焰王朝、
+  <a class="wl" href="#domain-abyss">永夜深淵</a>的契約王朝與黑淵母邦——皆有清楚可考的世系傳承,是理解各域政治延續性的關鍵。</p>
+
+  <h2><a class="wl" href="#nation-pyraxis">熔焰王朝</a>(龍女)</h2>
+  <p>始於紀元1200<a class="wl" href="#event-sky-war">天穹之戰</a>後,由戰爭英雄統一<a class="wl" href="#race-dragonkin">龍女</a>氏族而建立。</p>
+  <table class="wiki-table">
+    <tr><th>代序</th><th>稱號/名諱</th><th>在位期間</th><th>事蹟</th></tr>
+    <tr><td>初代</td><td><a class="wl" href="#char-ignis">伊格妮絲一世「破天者」</a><br>Ignis I, the Skybreaker</td><td>紀元1200年後即位</td><td>領導龍女參與天穹之戰,戰後統一氏族,建立熔焰王國雛形</td></tr>
+    <tr><td>第15代</td><td><a class="wl" href="#char-vyra">微拉女王</a><br>Queen Vyra</td><td>紀元3780前後</td><td>代表熔焰王國簽署<a class="wl" href="#event-grand-concord">大交融協定</a></td></tr>
+    <tr><td>第29代</td><td><a class="wl" href="#char-camilla">卡蜜拉女王</a><br>Queen Camilla</td><td>紀元5890前後</td><td>領軍參與五域聯合鎮壓「<a class="wl" href="#history">影之叛亂</a>」</td></tr>
+    <tr><td>第38代・現任</td><td><a class="wl" href="#char-feyla">妃嵐女王</a><br>Queen Feyla</td><td>紀元6230(當前)</td><td>新生代年輕統治者,面臨傳統與革新衝突的當代挑戰</td></tr>
+  </table>
+
+  <h2><a class="wl" href="#nation-covenant">契約王朝</a>(魅魔)</h2>
+  <p>始於紀元3120「<a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>」,始祖<a class="wl" href="#creature-lilithshadow">莉莉絲之影</a>退隱後不再親自統治,
+  但依傳統,每一任<a class="wl" href="#race-lilith">魅魔</a>女王加冕時皆會採用「莉莉絲」為攝政稱號,以示血脈與秩序的延續。</p>
+  <table class="wiki-table">
+    <tr><th>稱號</th><th>在位期間</th><th>本名</th><th>事蹟</th></tr>
+    <tr><td><a class="wl" href="#char-lilith1">莉莉絲一世「夜后」</a></td><td>紀元3120年即位</td><td>不可考</td><td>正式建立契約王朝與「情慾契約」制度</td></tr>
+    <tr><td><a class="wl" href="#char-lilith3">莉莉絲三世</a></td><td>紀元3780前後</td><td>不可考</td><td>代表契約王朝簽署大交融協定</td></tr>
+    <tr><td><a class="wl" href="#char-lilith5">莉莉絲五世</a></td><td>紀元5890前後</td><td>不可考</td><td>領軍參與鎮壓影之叛亂</td></tr>
+    <tr><td><a class="wl" href="#char-vesha">莉莉絲七世・現任</a></td><td>紀元6230(當前)</td><td>薇夏(Vesha)</td><td>登基後依傳統加冕為「莉莉絲七世」</td></tr>
+  </table>
+
+  <h2><a class="wl" href="#nation-umbral">黑淵母邦</a>(黑暗精靈)</h2>
+  <table class="wiki-table">
+    <tr><th>稱號</th><th>在位期間</th><th>事蹟</th></tr>
+    <tr><td><a class="wl" href="#char-umbrys">開國暗后 陰紗</a><br>Umbrys the Founder</td><td>紀元約1200~1500間</td><td>統一分散的黑暗精靈部族,建立黑淵母邦</td></tr>
+    <tr><td><a class="wl" href="#char-cyanessa">現任暗后 賽妮絲</a><br>Cyanessa</td><td>紀元6230(當前)</td><td>與熔焰王國、契約王朝並列當代三大君主之一</td></tr>
+  </table>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王國</span><span class="tag">#契約王朝</span><span class="tag">#黑淵母邦</span><span class="tag">#歷史英雄錄</span>
+  </div>
+  `
+},
+'notable-figures':{
+  title:'歷史英雄錄', category:'人物與譜系', domain:null, tags:['英雄','歷史人物','現任領袖'],
+  alt:'Notable Figures of the Ages',
+  body:`
+  <p>除了世襲王朝(詳見<a class="wl" href="#royal-lineages">王室譜系</a>),艾瑟瑞亞的歷史同樣由許多非世襲政體推舉出的領袖與英雄所形塑。</p>
+
+  <h2><a class="wl" href="#event-grand-concord">大交融協定</a>五域代表(紀元3780)</h2>
+  <p>五域代表齊聚世界樹下,簽訂結束長期猜忌、開啟跨域貿易時代的和平協定:</p>
+  <table class="wiki-table">
+    <tr><th>域</th><th>代表</th><th>所屬政體</th></tr>
+    <tr><td><a class="wl" href="#domain-ember">炙炎山脈</a></td><td><a class="wl" href="#char-vyra">微拉女王</a></td><td><a class="wl" href="#nation-pyraxis">熔焰王朝</a></td></tr>
+    <tr><td><a class="wl" href="#domain-lunar">月影古林</a></td><td><a class="wl" href="#char-frost">月牙首領「寒霜」</a></td><td><a class="wl" href="#nation-lunarfang">月伏部落聯盟</a></td></tr>
+    <tr><td><a class="wl" href="#domain-abyss">永夜深淵</a></td><td><a class="wl" href="#char-lilith3">莉莉絲三世</a></td><td><a class="wl" href="#nation-covenant">契約王朝</a></td></tr>
+    <tr><td><a class="wl" href="#domain-bloom">晶夢花海</a></td><td><a class="wl" href="#char-springwhisper">當季代表「春語」</a></td><td><a class="wl" href="#nation-petalconcord">花瓣聯盟</a></td></tr>
+    <tr><td><a class="wl" href="#domain-trench">深海裂隙</a></td><td><a class="wl" href="#char-coralie">大合唱長「珂拉莉」</a></td><td><a class="wl" href="#nation-choral">歌詠議會</a></td></tr>
+  </table>
+
+  <h2><a class="wl" href="#event-shadow-rebellion">影之叛亂</a>鎮壓統帥(紀元5890)</h2>
+  <p>面對影魅奪取世界樹控制權的威脅,罕見地由三大君主聯合出兵鎮壓,是艾瑟瑞亞歷史上少數的跨域軍事同盟案例:
+  熔焰王朝<a class="wl" href="#char-camilla">卡蜜拉女王</a>、契約王朝<a class="wl" href="#char-lilith5">莉莉絲五世</a>,
+  以及黑淵母邦當時的暗后共同統率聯軍。</p>
+
+  <h2>人族拓境城創始人</h2>
+  <p><a class="wl" href="#char-kane"><b>凱恩・灰旅(Kane Greytrail)</b></a>——紀元850前後隨<a class="wl" href="#race-human">人族</a>一同墜入艾瑟瑞亞的倖存者之一,
+  在<a class="wl" href="#unclaimed-territories">雲隙荒境</a>建立起第一個人族據點,即後來的<a class="wl" href="#pathfinders-hold">拓境城</a>,
+  被尊為拓境行會聯合的精神創始人。</p>
+
+  <h2>各政體現任領袖一覽</h2>
+  <table class="wiki-table">
+    <tr><th>政體</th><th>現任領袖</th><th>頭銜</th></tr>
+    <tr><td>熔焰王國</td><td><a class="wl" href="#char-feyla">妃嵐</a></td><td>熔焰女王(第38代)</td></tr>
+    <tr><td>焰狐盟</td><td><a class="wl" href="#char-ashflame">灰焰長老</a></td><td>輪值代表</td></tr>
+    <tr><td>月伏部落聯盟</td><td><a class="wl" href="#char-silvyia">希爾薇亞</a></td><td>現任月牙首領</td></tr>
+    <tr><td>幻林城邦・夢絲城</td><td><a class="wl" href="#char-fuyue">芙月</a></td><td>千帳狐・首席長老</td></tr>
+    <tr><td>契約王朝</td><td><a class="wl" href="#char-vesha">薇夏</a></td><td>莉莉絲七世</td></tr>
+    <tr><td>黑淵母邦</td><td><a class="wl" href="#char-cyanessa">賽妮絲</a></td><td>暗后</td></tr>
+    <tr><td>根都</td><td><a class="wl" href="#char-silan">塞倫</a></td><td>樹精大長老</td></tr>
+    <tr><td>歌詠議會</td><td><a class="wl" href="#char-coralie">珂拉莉</a></td><td>大合唱長</td></tr>
+    <tr><td>拓境行會聯合</td><td><a class="wl" href="#char-eleanor">艾莉諾・拓境</a></td><td>現任會長</td></tr>
+  </table>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#王室譜系</span><span class="tag">#大交融協定</span><span class="tag">#影之叛亂</span><span class="tag">#人族</span>
+  </div>
+  `
+},
+
+/* ---------------- 附錄 ---------------- */
+calendar:{
+  title:'大陸曆法', category:'附錄', domain:null, tags:['曆法','季節','節慶','附錄'],
+  alt:'附錄C · The Calendar of Aetheria',
+  infobox:{'曆法名稱':'以太曆(Aetherian Calendar)','計數方式':'紀元連續計數,自創世紀元0起算','當前':'紀元6230'},
+  body:`
+  <p>艾瑟瑞亞使用「以太曆」計時,自<a class="wl" href="#creation-myth">創世之刻</a>(紀元0)起連續累計至今,當前為紀元6230年。
+  一年分為四季,每季再分三個月份,月份命名多半呼應<a class="wl" href="#migration">跨域遷徙路線</a>的節奏。</p>
+
+  <h2>四季與月份</h2>
+  <table class="wiki-table">
+    <tr><th>季節</th><th>月份</th><th>對應遷徙/儀式</th></tr>
+    <tr><td>春(覺醒之途季)</td><td>萌翼月・花語月・覺醒月</td><td><a class="wl" href="#migration">覺醒之途</a>——<a class="wl" href="#race-bloomsprites">花精</a>、星塵龍女向外擴散夢境花粉</td></tr>
+    <tr><td>夏(火之誓約季)</td><td>熾陽月・焰誓月・灼夏月</td><td><a class="wl" href="#migration">火之誓約</a>——<a class="wl" href="#race-dragonkin">龍女</a>、炎狐舉行火之交融儀式</td></tr>
+    <tr><td>秋(月之狂獵季)</td><td>銀狩月・狂月・霜降月</td><td><a class="wl" href="#migration">月之狂獵</a>——<a class="wl" href="#race-lunarfang">狼女</a>、血狐尋找跨域伴侶</td></tr>
+    <tr><td>冬(深淵冬眠季)</td><td>蟄影月・凝夜月・淵眠月</td><td><a class="wl" href="#migration">深淵冬眠</a>——黑暗精靈、<a class="wl" href="#race-lilith">魅魔</a>、海妖回歸地下與深海</td></tr>
+  </table>
+
+  <h2>特殊節慶</h2>
+  <table class="wiki-table">
+    <tr><th>節慶</th><th>週期</th><th>時間點</th><th>內容</th></tr>
+    <tr><td>潮盈節</td><td>每年一次</td><td>覺醒月最後一日</td><td>對應<a class="wl" href="#magic-system">魔力潮汐</a>,全大陸魔力提升300%,各族進入繁殖高峰,舉城歡慶</td></tr>
+    <tr><td>世界樹開花季</td><td>每7年一次</td><td>固定於覺醒之途季首日開始,持續整季</td><td>全大陸生物向<a class="wl" href="#unclaimed-territories">根都</a>朝聖,是<a class="wl" href="#pantheon-faith">世界樹信仰</a>最神聖的盛會</td></tr>
+  </table>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#附錄總覽</span><span class="tag">#跨域遷徙路線</span><span class="tag">#魔力循環</span>
+  </div>
+  `
+},
+'appendix-overview':{
+  title:'附錄總覽', category:'附錄', domain:null, tags:['附錄','索引'],
+  alt:'Appendices · 仿托爾金式附錄索引',
+  body:`
+  <p>本頁彙整艾瑟瑞亞百科中偏向「參考工具」性質的章節,仿效傳統史詩奇幻慣用的附錄體例,方便查閱。</p>
+  <ul>
+    <li><b>附錄A・王室譜系</b>——<a class="wl" href="#royal-lineages">熔焰王朝、契約王朝、黑淵母邦三大世襲王朝的完整世系表</a></li>
+    <li><b>附錄B・完整編年表</b>——<a class="wl" href="#history">自創世之刻至當前紀元6230的大陸編年史</a></li>
+    <li><b>附錄C・大陸曆法</b>——<a class="wl" href="#calendar">四季月份命名、潮盈節與世界樹開花季的曆法系統</a></li>
+    <li><b>附錄D・語言與文字</b>——<a class="wl" href="#language">通用語、十種族文字系統,以及命名慣例與詞根對照表</a></li>
+    <li><b>附錄E・神器與遺物</b>——<a class="wl" href="#legendary-artifacts">八件貫穿大陸歷史的知名神器</a></li>
+    <li><b>附錄F・歷史英雄錄</b>——<a class="wl" href="#notable-figures">非世襲政體的具名領袖與各政體現任領袖一覽表</a></li>
+  </ul>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#王室譜系</span><span class="tag">#大陸曆法</span><span class="tag">#語言與文字</span>
+  </div>
+  `
+},
+
+/* ---------------- 衍生故事 ---------------- */
+'flagship-saga':{
+  title:'《渴望的抉擇》三部曲大綱', category:'衍生故事', domain:null, tags:['故事大綱','三部曲','闇蝕之心','當代預言'],
+  alt:"The Longing's Choice — A Proposed Trilogy",
+  infobox:{'時間設定':'紀元6295~6300(第八次開花季前後)','核心懸念':'<a class="wl" href="#legendary-artifacts">闇蝕之心</a>的下落與<a class="wl" href="#pantheon-faith">當代預言</a>','結構':'三部曲,仿《魔戒》的多線政治+尋物任務'},
+  body:`
+  <p>這是一份把百科中既有伏筆——<a class="wl" href="#pantheon-faith">當代預言</a>、下落成謎的
+  <a class="wl" href="#legendary-artifacts">闇蝕之心</a>、<a class="wl" href="#unclaimed-territories">影裔殘部</a>、
+  以及<a class="wl" href="#pantheon-faith">永夜真理教</a>——串成一條主線的故事大綱提案,結構刻意仿照《魔戒》三部曲:
+  一支跨種族「同伴隊」、一件必須被找到並抉擇如何處置的危險神器、多條政治支線,以及最終呼應世界觀核心主題的結局。</p>
+
+  <h2>前提:為什麼是現在</h2>
+  <p>紀元6295年,距離第八次<a class="wl" href="#magic-system">世界樹開花季</a>僅剩五年。<a class="wl" href="#nation-rootreach">根都</a>
+  護根者發現世界樹的年度「流淚」異常減少——<a class="wl" href="#legendary-artifacts">世界樹之淚</a>的產量逐年下滑,暗示
+  <a class="wl" href="#legendary-artifacts">闇蝕之心</a>並未真正消失,而是被人刻意封存,並開始緩慢滲透<a class="wl" href="#magic-system">魔力循環</a>。</p>
+
+  <h2>同伴隊(仿魔戒遠征隊的跨種族小隊)</h2>
+  <ul>
+    <li><b><a class="wl" href="#char-reya">蕾雅(Reya)</a></b>——<a class="wl" href="#race-human">人族</a>年輕嚮導,凱恩·灰旅的後裔,<a class="wl" href="#legendary-artifacts">拓境羅盤</a>的現任守護者,故事的視角人物(對應佛羅多的「局外人視角」)</li>
+    <li><b><a class="wl" href="#char-vygan">熔焰騎士(維岡)</a></b>——效忠<a class="wl" href="#royal-lineages">妃嵐女王</a>的年輕<a class="wl" href="#race-dragonkin">龍女</a>,家族與初代女王伊格妮絲同源,渴望證明自己不只是「王室的影子」</li>
+    <li><b><a class="wl" href="#char-syra">拒教貴族(賽拉)</a></b>——<a class="wl" href="#nation-umbral">黑淵母邦</a>內部拒絕<a class="wl" href="#pantheon-faith">永夜真理教</a>教義的年輕貴族,揭露母邦內部腐化的關鍵人物</li>
+    <li><b><a class="wl" href="#char-vero">根都使者(薇珞)</a></b>——<a class="wl" href="#race-dryads">樹精</a>護根者,道德與宗教權威的化身(對應甘道夫的定位)</li>
+    <li><b><a class="wl" href="#char-nyle">贖罪的影魅(奈爾)</a></b>——一名對政治毫無興趣、卻因血緣捲入其中的隱居<a class="wl" href="#race-shadowkin">影魅</a>,知曉紀元5890
+    <a class="wl" href="#event-shadow-rebellion">影之叛亂</a>的內幕(咕嚕/波羅莫式的悲劇弧線角色,背負污名卻可能是解開真相的關鍵)</li>
+  </ul>
+
+  <h2>第一部:破碎的預言</h2>
+  <p>蕾雅所屬的商隊在<a class="wl" href="#unclaimed-territories">雲隙荒境</a>意外發現一小塊會「反向吞噬」魔力的黑色晶體碎片——
+  闇蝕之心並非完整消失,而是碎裂流散多年。她被迫與各域代表組成小隊尋找其餘碎片。第一部尾聲,小隊遭
+  <a class="wl" href="#pantheon-faith">永夜真理教</a>激進派伏擊,證實母邦內部確有勢力正在重組闇蝕之心,意圖在下次開花季
+  世界樹最脆弱的時刻奪取控制權。</p>
+
+  <h2>第二部:眾王的抉擇</h2>
+  <p>政治線全面展開:<a class="wl" href="#royal-lineages">妃嵐女王</a>必須在信任跨域同盟與安撫國內保守「爐主」派系
+  (他們不願為一則未證實的預言耗費資源)之間抉擇;<a class="wl" href="#nation-covenant">契約王朝</a>的莉莉絲七世則暗中與
+  敵對勢力談判,換取自身政治利益,埋下背叛伏筆。中段高潮發生在一次魔力潮汐期間對<a class="wl" href="#nation-rootreach">根都</a>
+  的突襲,測試這座「絕對中立聖地」能否真正扛住戰火。第二部尾聲,贖罪的影魅為保護同伴犧牲關鍵利益,揭露自己當年曾參與叛亂,
+  並交出最後一塊碎片的位置線索——代價是永遠失去同伴的信任。</p>
+
+  <h2>第三部:渴望的抉擇</h2>
+  <p>高潮設定於世界樹本體,恰逢第八次開花季。同伴隊必須抉擇:徹底摧毀闇蝕之心(可能永久切斷<a class="wl" href="#magic-system">魔力循環</a>
+  的一部分,削弱大陸魔法根基),或嘗試淨化並重新整合它(風險更高,一旦失敗可能徹底釋放其力量)。最終抉擇刻意呼應本作
+  <a class="wl" href="#creation-myth">創世神話</a>與<a class="wl" href="#magic-system">魔力循環</a>的核心命題——魔力源於渴望與連結,
+  而非單純的力量支配,因此解方不在於「摧毀」或「征服」,而在於角色們願不願意選擇彼此信任。</p>
+
+  <h2>結局走向</h2>
+  <p>蕾雅成為<a class="wl" href="#race-human">人族</a>正式融入大陸政治的象徵性人物;<a class="wl" href="#nation-pyraxis">熔焰王朝</a>
+  聲望上升;<a class="wl" href="#nation-umbral">黑淵母邦</a>經歷內部改革,<a class="wl" href="#pantheon-faith">永夜真理教</a>影響力
+  受挫但未被根除——刻意留下續集空間,而非一勞永逸的「大團圓」,更貼近艾瑟瑞亞「傳統與革新持續拉扯」的新生代基調。</p>
+
+  <blockquote>這只是一份提案大綱,角色名字、細節走向都可以依你的喜好調整替換——核心是示範如何把百科裡分散的伏筆
+  (預言、神器、異端、污名化的種族)串成一條可以推進到底的主線。</blockquote>
+
+  <h2>完整章節大綱</h2>
+  <ul>
+    <li><a class="wl" href="#saga-part1">第一部:破碎的預言</a>——全14章</li>
+    <li><a class="wl" href="#saga-part2">第二部:眾王的抉擇</a>——全14章</li>
+    <li><a class="wl" href="#saga-part3">第三部:渴望的抉擇</a>——全14章</li>
+  </ul>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#當代預言</span><span class="tag">#闇蝕之心</span><span class="tag">#影裔殘部</span><span class="tag">#人族</span>
+  </div>
+  `
+},
+'saga-part1':{
+  title:'第一部:破碎的預言', category:'衍生故事', domain:null, tags:['章節大綱','第一部'],
+  alt:'Book I · The Broken Omen',
+  infobox:{'上一部':'——','下一部':'<a class="wl" href="#saga-part2">第二部:眾王的抉擇</a>','章節數':'14章'},
+  body:`
+  <p>返回<a class="wl" href="#flagship-saga">三部曲總覽</a>。</p>
+  <ol>
+    <li><b>拓境城的黎明</b>——帶出蕾雅的日常與拓境城市井氣息。她繼承<a class="wl" href="#notable-figures">凱恩·灰旅</a>遺留的
+    <a class="wl" href="#legendary-artifacts">拓境羅盤</a>改良版,準備出一趟例行商隊任務,埋下她對「血脈遺產」複雜心情的伏筆。</li>
+    <li><b>雲隙荒境的裂痕</b>——商隊在<a class="wl" href="#unclaimed-territories">雲隙荒境</a>遭遇異常的「魔力真空」地帶,
+    發現一塊黑色晶體碎片,觸碰者會感到強烈疲憊感與惡夢般幻覺——首次暗示<a class="wl" href="#legendary-artifacts">闇蝕之心</a>的存在。</li>
+    <li><b>羅盤失靈</b>——拓境羅盤在晶體附近完全失靈,是自凱恩時代以來首次記錄到「無法辨識」的異常讀數。蕾雅決定私自將晶體帶回
+    <a class="wl" href="#pathfinders-hold">拓境城</a>,而非按規定回報行會——她的第一個關鍵抉擇。</li>
+    <li><b>根都的召見</b>——拓境行會上報後,<a class="wl" href="#nation-rootreach">根都</a>護根者迅速介入,揭露世界樹年度流淚異常
+    減少已持續數年。晶體被證實是闇蝕之心的碎片,懸念全面展開。</li>
+    <li><b>五域急件</b>——根都向五大政體發出緊急通牒。穿插多線短景:<a class="wl" href="#nation-pyraxis">熔焰王國</a>朝堂上
+    <a class="wl" href="#royal-lineages">妃嵐女王</a>與保守爐主的初次交鋒;<a class="wl" href="#nation-umbral">黑淵母邦</a>內部異樣的沉默;
+    <a class="wl" href="#nation-covenant">契約王朝</a>表面積極配合、實則另有盤算。</li>
+    <li><b>熔焰騎士</b>——蕾雅與年輕龍女騎士初次相遇於根都,兩人因任務優先權意見不合而摩擦,建立起互不信任但被迫合作的關係雛形。</li>
+    <li><b>拒教者</b>——黑淵母邦派來的年輕貴族抵達,身分尷尬——她是母邦官方代表,卻私下痛恨<a class="wl" href="#pantheon-faith">永夜真理教</a>
+    在母邦內部的擴張。首次揭露黑暗精靈內部並非鐵板一塊。</li>
+    <li><b>隱居者的門</b>——隊伍前往尋找傳說中知曉舊事的隱居<a class="wl" href="#race-shadowkin">影魅</a>。過程中首次直面永夜深淵對
+    影魅的集體污名化——連護根者一開始都對是否該信任他猶豫不決。</li>
+    <li><b>碎片的回聲</b>——影魅同意加入,揭露自己對闇蝕之心「回聲」的敏感體質(能感應其他碎片方位),但拒絕透露完整過往,懸念加深。</li>
+    <li><b>火月之路上</b>——五人小隊正式啟程,沿<a class="wl" href="#transit-network">火月之路</a>前往下一個碎片可能所在地。
+    途中展現世界觀的地景與跨域文化衝突,蕾雅與龍女騎士在旅途瑣事上逐漸磨合。</li>
+    <li><b>蜂鳴鎮的密探</b>——在<a class="wl" href="#nation-kindling">焰狐盟</a>蜂鳴鎮停留補給時,發現有人暗中監視隊伍行蹤——
+    首次證實永夜真理教的觸角已延伸至炙炎山脈邊境。</li>
+    <li><b>女王的抉擇</b>——短暫返回赤鑄都,妃嵐女王面臨是否公開支持這支「跨域小隊」的政治壓力。她的決定將影響整個大陸的態度——
+    本書中期政治線的關鍵一章。</li>
+    <li><b>伏擊</b>——隊伍在前往下一處線索途中遭永夜真理教激進派伏擊。戰鬥場面揭示對方組織性與武裝程度遠超預期,
+    隨行的<a class="wl" href="#char-grien">格里恩老護根者</a>殿後掩護隊伍撤退,力戰而死,是全書第一個真正的犧牲。
+    完整戰鬥設計詳見<a class="wl" href="#battle-ambush">伏擊戰</a>。</li>
+    <li><b>破碎的預言</b>——伏擊後隊伍雖脫險但傷痕累累,拒教貴族從俘虜口中逼問出關鍵情報:真理教確實在重組闇蝕之心,
+    目標是下次<a class="wl" href="#magic-system">開花季</a>。全書收尾章,呼應書名,為第二部鋪路。</li>
+  </ol>
+  `
+},
+'saga-part2':{
+  title:'第二部:眾王的抉擇', category:'衍生故事', domain:null, tags:['章節大綱','第二部'],
+  alt:'Book II · The Choice of Kings',
+  infobox:{'上一部':'<a class="wl" href="#saga-part1">第一部:破碎的預言</a>','下一部':'<a class="wl" href="#saga-part3">第三部:渴望的抉擇</a>','章節數':'14章'},
+  body:`
+  <p>返回<a class="wl" href="#flagship-saga">三部曲總覽</a>。</p>
+  <ol>
+    <li><b>傷後歸途</b>——隊伍自伏擊中復原,關於是否公開行動或轉為秘密行事,成員間首次出現分歧。</li>
+    <li><b>熔焰王廷的分裂</b>——<a class="wl" href="#nation-pyraxis">熔焰王國</a>朝堂分裂為主張撤回支持的保守「爐主」派系,
+    與主張加大投入的革新派系,<a class="wl" href="#royal-lineages">妃嵐女王</a>陷入兩難。</li>
+    <li><b>契約都的邀約</b>——<a class="wl" href="#nation-covenant">契約王朝</a>薇夏(莉莉絲七世)邀請隊伍前往契約都,
+    表面提供援助,實則附帶條件——為她日後的秘密交易埋下伏筆。</li>
+    <li><b>拒教貴族的抉擇</b>——她必須在效忠<a class="wl" href="#nation-umbral">黑淵母邦</a>與揭發內部腐化之間做出選擇,
+    此舉將危及自己家族的地位。</li>
+    <li><b>龍女與人族</b>——蕾雅與熔焰騎士的關係從對立走向理解,兩人在旅途瑣事與價值觀衝突中逐漸建立信任。</li>
+    <li><b>影魅的沉默</b>——贖罪的影魅日漸沉默寡言,對自己的過往守口如瓶,隊伍隱約感覺到他背負著沒說出口的秘密。</li>
+    <li><b>薇夏的密室</b>——讀者視角(非隊伍視角)揭露莉莉絲七世正暗中與真理教勢力談判,以換取自身政治籌碼——戲劇反諷正式鋪開。</li>
+    <li><b>情報販子</b>——隊伍造訪<a class="wl" href="#nation-dreamsilk">夢絲城</a>打探情報,得知傳聞中「第二塊碎片」藏於根都邊境附近。</li>
+    <li><b>潮汐的警訊</b>——側寫支線:<a class="wl" href="#nation-tidewatch">潮汐議會</a>與<a class="wl" href="#nation-choral">歌詠議會</a>
+    偵測到<a class="wl" href="#unclaimed-territories">未圖之境</a>周邊出現異常暗流,為後續伏筆。</li>
+    <li><b>根都之危</b>——一次較小規模的<a class="wl" href="#magic-system">魔力潮汐</a>期間,<a class="wl" href="#nation-rootreach">根都</a>
+    遭真理教勢力突襲,測試這座「絕對中立聖地」能否真正扛住戰火——本書最大戰鬥場面。隨行的熔焰保守派
+    <a class="wl" href="#char-hodgan">赫崗長老</a>身先士卒堵住結界缺口,力戰而死,死後反而成為說服王國保守派支持同盟的關鍵。
+    完整戰鬥設計詳見<a class="wl" href="#battle-rootreach">根都之危</a>。</li>
+    <li><b>破綻</b>——戰鬥中浮現證據,牽連<a class="wl" href="#nation-covenant">契約王朝</a>涉入其中,隊伍互信首次真正動搖。</li>
+    <li><b>對峙</b>——隊伍成員為此爆發衝突,拒教貴族極力為黑淵母邦的清白辯護,不願接受契約王朝牽連一事被過度解讀。</li>
+    <li><b>影魅的告白</b>——被逼至角落的影魅終於坦承自己曾參與紀元5890「<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>」,
+    並透露最後一塊碎片可能的下落——代價是坦承自己的過往共犯身分,在隊伍最需要他時反而動搖了彼此的信任。</li>
+    <li><b>眾王的抉擇</b>——收尾章:妃嵐女王不顧國內反對聲浪,決定全力投入;最後一塊碎片的線索確立,隊伍轉向世界樹方向,
+    開花季的倒數正式啟動,為第三部鋪路。</li>
+  </ol>
+  `
+},
+'saga-part3':{
+  title:'第三部:渴望的抉擇', category:'衍生故事', domain:null, tags:['章節大綱','第三部','結局'],
+  alt:"Book III · The Longing's Choice",
+  infobox:{'上一部':'<a class="wl" href="#saga-part2">第二部:眾王的抉擇</a>','下一部':'——(完結)','章節數':'14章'},
+  body:`
+  <p>返回<a class="wl" href="#flagship-saga">三部曲總覽</a>。</p>
+  <ol>
+    <li><b>開花將至</b>——開場確立第八次<a class="wl" href="#magic-system">開花季</a>的最終倒數,五域氣氛全面緊繃。</li>
+    <li><b>最後的碎片</b>——隊伍尋獲最後一塊碎片,守護者竟是一批未參與過叛亂的<a class="wl" href="#race-shadowkin">影魅</a>,
+    帶出「並非所有影魅都是敵人」的道德複雜性。</li>
+    <li><b>抉擇的重量</b>——隊伍內部就「摧毀」或「淨化重整」重組後的<a class="wl" href="#legendary-artifacts">闇蝕之心</a>爆發根本性
+    分歧,類似魔戒中愛隆議會式的辯論。</li>
+    <li><b>女王的親征</b>——<a class="wl" href="#royal-lineages">妃嵐女王</a>不顧朝堂反對,親自率軍馳援<a class="wl" href="#nation-rootreach">根都</a>
+    以護衛即將到來的儀式。</li>
+    <li><b>薇夏的攤牌</b>——莉莉絲七世的秘密交易全面曝光,她必須在政治算計與良知之間攤牌抉擇——非純粹反派的灰色人物弧線。</li>
+    <li><b>黑淵母邦的內戰</b>——拒教貴族一派在<a class="wl" href="#nation-umbral">黑淵母邦</a>內部與真理教同情者正面衝突,
+    小規模「內戰」子劇情收束。</li>
+    <li><b>影魅的救贖</b>——奈爾意識到自己與闇蝕之心的特殊「回聲」連結,決心在最終決戰中利用這份連結,完成自己的救贖弧線。</li>
+    <li><b>世界樹下的圍城</b>——各方勢力於世界樹與根系周邊全面會戰,是全書規模最大的戰役場面。
+    <a class="wl" href="#char-ashmother">灰母</a>率領未參與叛亂的影魅趕赴戰場,死守缺口為隊伍爭取時間,力戰而死,
+    洗刷了影魅族群長年的集體污名。完整戰役設計詳見<a class="wl" href="#battle-worldtree">世界樹下的圍城與渴望之選</a>。</li>
+    <li><b>面對闇蝕之心</b>——隊伍終於在世界樹根系深處,與重組完整的闇蝕之心正面對峙,途中揭穿
+    <a class="wl" href="#char-vannis">凡尼斯</a>企圖獨吞神器的陰謀,他當眾遭薇夏罷黜問罪,身敗名裂。</li>
+    <li><b>渴望之選</b>——最終抉擇時刻:摧毀或淨化。<a class="wl" href="#char-nyle">奈爾</a>與昔日引路人
+    <a class="wl" href="#char-grayspeaker">灰語者</a>正面對決,灰語者拒絕救贖,被自身企圖掌控的力量反噬而死;奈爾則重傷但存活,
+    留下永久印記。隊伍必須共同行動,呼應<a class="wl" href="#creation-myth">創世神話</a>與
+    <a class="wl" href="#magic-system">魔力循環</a>「渴望與連結勝過力量支配」的核心命題——解方不在武力,而在彼此的信任。</li>
+    <li><b>世界樹的回應</b>——神話層級的高潮,世界樹對眾人的抉擇做出回應,危機得以化解,但並非毫無代價。</li>
+    <li><b>塵埃落定</b>——政治餘波:妃嵐聲望大增;黑淵母邦啟動內部改革;永夜真理教受挫但未被根除。</li>
+    <li><b>蕾雅的選擇</b>——<a class="wl" href="#race-human">人族</a>視角收尾,蕾雅對自身血脈與未來身分做出個人抉擇。</li>
+    <li><b>新生代的黎明</b>——終章,呼應「新生代」的世界觀基調,刻意留下部分伏筆未完全了結(<a class="wl" href="#unclaimed-territories">影裔殘部</a>
+    餘部四散、預言僅部分應驗),為續作留白。</li>
+  </ol>
+  `
+},
+
+/* ---------------- 角色誌 ---------------- */
+'char-reya':{
+  title:'蕾雅・灰旅', category:'角色誌', domain:null, tags:['角色','視角主角','人族'],
+  alt:'Reya Greytrail · 視角主角',
+  infobox:{'性別':'女','年齡':'24歲','種族':'<a class="wl" href="#race-human">人族</a>','身分':'<a class="wl" href="#pathfinders-hold">拓境城</a>嚮導,<a class="wl" href="#legendary-artifacts">拓境羅盤</a>現任守護者','血緣':'<a class="wl" href="#notable-figures">凱恩·灰旅</a>後裔','登場':'<a class="wl" href="#saga-part1">第一部</a>第1章'},
+  body:`
+  <p>務實、機靈,習慣用自嘲化解尷尬,是<a class="wl" href="#pathfinders-hold">拓境城</a>「不問出身只看本事」文化養出來的孩子。
+  表面上灑脫隨性,內心其實背著「冒牌者症候群」——她沒選擇成為<a class="wl" href="#notable-figures">凱恩·灰旅</a>的後裔,
+  但所有人都預期她該像創城者一樣扛起責任,而她自己也不確定辦不辦得到。</p>
+
+  <h2>個性細節</h2>
+  <p>說話快、愛用工匠術語打比方,緊張時會下意識檢查裝備確認「至少東西都在」。對權威人物(女王、大長老)不會怯場,
+  反而對「被當成傳奇後代看待」這件事最不自在——她寧可別人記得她修好了什麼東西,而不是記得她姓什麼。</p>
+
+  <h2>性格缺陷</h2>
+  <p>習慣「先斬後奏」,遇到不確定的事寧可自己扛下來也不輕易求助或回報上級(<a class="wl" href="#saga-part1">第一部</a>第3章
+  「私自帶回拓境城」就是這個缺陷的初次爆發)。這個缺陷在第二部會反噬她——當隊伍發現她一直隱瞞某些細節時,信任會出現裂痕。</p>
+
+  <h2>弧線</h2>
+  <p>從「只是想把工作做好的局外人」,走到「必須主動選擇自己要不要成為連結五域的橋樑人物」。<a class="wl" href="#saga-part3">第三部</a>
+  第13章「蕾雅的選擇」收束這條線。</p>
+
+  <h2>人際關係</h2>
+  <p>與熔焰騎士<a class="wl" href="#char-vygan">維岡</a>發展出跨種族的過命交情,詳見<a class="wl" href="#char-relationships">人際關係與感情線</a>。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#人族</span><span class="tag">#拓境城</span><span class="tag">#三部曲大綱</span>
+  </div>
+  `
+},
+'char-vygan':{
+  title:'維岡・赫爾迦', category:'角色誌', domain:'ember', tags:['角色','熔焰騎士','龍女'],
+  alt:'Vygan Hurka · 熔焰騎士',
+  infobox:{'性別':'男','年齡':'表觀27歲(龍女成年後老化速度趨緩,實際歲數略長於外觀)','種族':'<a class="wl" href="#race-dragonkin">龍女</a>','身分':'熔焰王國旁系貴族騎士','效忠對象':'<a class="wl" href="#royal-lineages">妃嵐女王</a>','登場':'<a class="wl" href="#saga-part1">第一部</a>第6章'},
+  body:`
+  <p>驕傲、恪守規矩,出身沒落的旁系貴族家族,一直活在「必須證明自己配得上先祖戰功」的壓力下。初期會不自覺用
+  「有沒有魔力天賦」衡量一個人的價值,因此起初瞧不起<a class="wl" href="#char-reya">蕾雅</a>這種「毫無元素親和力的外人」。</p>
+
+  <h2>個性細節</h2>
+  <p>說話直來直往,不擅長拐彎抹角,吵架時反而比討好時更真誠。對「輸」這件事極度敏感,但輸給講理的人時,
+  又會出乎意料地服氣得很快——這種「輸得起卻嘴硬」的矛盾,是他跟隊伍磨合的破口。</p>
+
+  <h2>性格缺陷</h2>
+  <p>榮譽感過重導致的僵化——很難承認自己判斷有誤,把「力量」等同於「價值」的思維定式,是他跟拒教貴族
+  <a class="wl" href="#char-syra">賽拉</a>在道德辯論時容易踩到彼此地雷的原因。</p>
+
+  <h2>弧線</h2>
+  <p>從對立的競爭關係走向欣賞,最終學會領導有時候意味著相信別人的判斷而非只靠位階壓人。詳見
+  <a class="wl" href="#char-relationships">人際關係與感情線</a>中他與蕾雅的過命交情發展。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#龍女</span><span class="tag">#熔焰王國</span><span class="tag">#三部曲大綱</span>
+  </div>
+  `
+},
+'char-syra':{
+  title:'賽拉・渥登', category:'角色誌', domain:'abyss', tags:['角色','拒教貴族','黑暗精靈'],
+  alt:'Syra Voldrenn · 拒教貴族',
+  infobox:{'性別':'女','年齡':'62歲(黑暗精靈壽命可達400餘年,62歲僅相當於人類二十餘歲的心智成熟度)','種族':'<a class="wl" href="#race-drow">黑暗精靈</a>','身分':'<a class="wl" href="#nation-umbral">黑淵母邦</a>貴族,官方代表','立場':'私下反對<a class="wl" href="#pantheon-faith">永夜真理教</a>','登場':'<a class="wl" href="#saga-part1">第一部</a>第7章'},
+  body:`
+  <p>極度自律、情感內斂(符合黑暗精靈文化的防衛性格),對母邦內部的腐化懷著壓抑的憤怒——這份憤怒裡摻雜著倖存者的愧疚:
+  她自己也是既得利益的貴族階層一員。一旦信任建立,會展現出近乎偏執的忠誠。</p>
+
+  <h2>個性細節</h2>
+  <p>惜字如金,習慣觀察多於發言,判斷一個人往往只需要相處半天。私底下對堂妹<a class="wl" href="#char-relationships">妲莉亞</a>
+  展現出罕見的柔軟一面,是少數能讓她卸下防備的人。</p>
+
+  <h2>性格缺陷</h2>
+  <p>道德潔癖有時會凌駕於團隊默契之上,<a class="wl" href="#saga-part2">第二部</a>第12章「對峙」正是她因為不願接受
+  「<a class="wl" href="#nation-covenant">契約王朝</a>也有份」的證據而與隊伍起衝突。</p>
+
+  <h2>弧線</h2>
+  <p>學會理想主義與務實結盟的平衡,<a class="wl" href="#saga-part3">第三部</a>裡她在母邦內部對抗真理教同情者的那場「內戰」,
+  是她個人的清算時刻。</p>
+
+  <h2>家族</h2>
+  <p>堂妹<a class="wl" href="#char-relationships">妲莉亞</a>是黑淵母邦士兵,兩人立場相近,詳見人際關係頁。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#黑暗精靈</span><span class="tag">#黑淵母邦</span><span class="tag">#永夜真理教</span>
+  </div>
+  `
+},
+'char-vero':{
+  title:'薇珞・根語', category:'角色誌', domain:'bloom', tags:['角色','根都使者','樹精'],
+  alt:'Vero Rootspeaker · 根都使者',
+  infobox:{'性別':'女','年齡':'450歲(樹精壽命居全大陸之冠,紀元5890影之叛亂時她已是成年護根者)','種族':'<a class="wl" href="#race-dryads">樹精</a>','身分':'<a class="wl" href="#nation-rootreach">根都</a>護根者','背景':'紀元5890<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>親歷者','登場':'<a class="wl" href="#saga-part1">第一部</a>第4章'},
+  body:`
+  <p>耐心、有時故弄玄虛(引路者定位),背負著世代累積的記憶重量——她其實是紀元5890「影之叛亂」的親歷者之一,
+  曾在那場叛亂中失去一位導師。溫暖但立場堅定,願意為大局做艱難決定。</p>
+
+  <h2>個性細節</h2>
+  <p>說話節奏慢,習慣先沉默幾秒再回答,年輕種族的隊員常被這種「拖拍」搞得心急,但她其實只是在用數百年的
+  視角重新掂量問題的份量。對<a class="wl" href="#char-reya">蕾雅</a>這種年輕人族,私下抱著一種近乎祖母般的疼惜。</p>
+
+  <h2>性格缺陷</h2>
+  <p>習慣「時候未到就不說」,這種資訊控管有時候會讓隊伍在關鍵時刻措手不及——連智者引路人也不是完美的。</p>
+
+  <h2>弧線</h2>
+  <p>當她發現<a class="wl" href="#nation-rootreach">根都</a>自己對影之叛亂的官方說法其實有所隱瞞時,必須在
+  「維護教團權威」與「良心」之間做選擇。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#樹精</span><span class="tag">#根都</span><span class="tag">#影之叛亂</span>
+  </div>
+  `
+},
+'char-nyle':{
+  title:'奈爾', category:'角色誌', domain:'abyss', tags:['角色','贖罪的影魅','影魅'],
+  alt:'Nyle · 贖罪的影魅',
+  infobox:{'性別':'男','年齡':'外觀近似人類30歲,實際歲數不可考(影魅的形體特性使歲月痕跡難以估算)','種族':'<a class="wl" href="#race-shadowkin">影魅</a>','背景':'紀元5890<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>倖存共犯','現況':'獨自流放,拒絕面對族人','登場':'<a class="wl" href="#saga-part1">第一部</a>第8章'},
+  body:`
+  <p>孤僻、慣用陰鬱的自嘲當防衛機制,長年活在自我懲罰式的愧疚裡。他曾是年輕的<a class="wl" href="#pantheon-faith">永夜真理教</a>信徒,
+  真心相信教義能為長期被污名化的<a class="wl" href="#race-shadowkin">影魅</a>族群爭一口氣,直到暴力真正爆發才驚醒逃離,
+  此後獨自流放,從未真正面對過自己的族人。</p>
+
+  <h2>個性細節</h2>
+  <p>慣用黑色幽默包裝真心話,越是重要的事越用玩笑口吻帶過,讓人很難察覺他其實在乎。獨處時會不自覺重複整理隨身物品,
+  是他用來壓下罪惡感的強迫性小動作。</p>
+
+  <h2>性格缺陷</h2>
+  <p>習慣性自我孤立,拒絕連結、拒絕求助,用隱瞞真相來保護自己不被評判——這正是他在<a class="wl" href="#saga-part1">第一部</a>第9章
+  與<a class="wl" href="#saga-part2">第二部</a>第13章「告白」反覆卡關的原因。</p>
+
+  <h2>弧線</h2>
+  <p>全書最清晰的救贖弧線。<a class="wl" href="#saga-part3">第三部</a>第7章他用自己與<a class="wl" href="#legendary-artifacts">闇蝕之心</a>
+  的特殊連結捨身相救,完成的正是「選擇連結而非繼續自我懲罰」的主題——直接呼應世界觀<a class="wl" href="#magic-system">魔力循環</a>的核心命題。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#影魅</span><span class="tag">#影之叛亂</span><span class="tag">#闇蝕之心</span>
+  </div>
+  `
+},
+'char-relationships':{
+  title:'人際關係與感情線', category:'角色誌', domain:null, tags:['人際關係','感情線','跨種族'],
+  alt:"Bonds & Romances — modeled on Legolas/Gimli, Aragorn/Arwen, Éowyn/Faramir",
+  body:`
+  <p>感情線刻意不放在主角團核心五人之中,以免分散主線任務的焦點——參考《魔戒》遠征隊本身沒有內部戀情,
+  感情線另外安排在政治聯姻與戰火餘生兩條支線上。</p>
+
+  <h2>蕾雅 × 維岡:跨種族的過命交情</h2>
+  <p>參考精靈萊戈拉斯與矮人金靂——兩個原本互相輕視的種族代表,靠著並肩作戰磨出過命的交情,但不是愛情。</p>
+  <ul>
+    <li><b>第一部</b>:文化摩擦式的針鋒相對——<a class="wl" href="#char-vygan">維岡</a>覺得<a class="wl" href="#char-reya">蕾雅</a>
+    「沒有魔力憑什麼指手畫腳」,蕾雅覺得維岡是「被頭銜寵壞的自大龍族」。兩人互相看不順眼,卻被迫合作。</li>
+    <li><b>第二部第5章</b>:旅途中的瑣碎日常(分食、輪班守夜、彼此掩護)讓針鋒相對逐漸軟化成帶刺的玩笑,維岡開始注意到蕾雅
+    那種「沒有魔力卻總能想出辦法」的韌性,蕾雅也發現維岡的驕傲底下其實是對自己家族沒落的深層焦慮。</li>
+    <li><b>第三部決戰前夕</b>:維岡主動把家族佩劍託付給蕾雅保管——象徵他終於把「血統地位」的執念放下,轉而信任「本事」本身。
+    這是全書最重要的信任支點,直接決定<a class="wl" href="#saga-part3">第三部</a>「渴望之選」能不能成功
+    (蕾雅需要維岡不假思索地聽她判斷,而不是靠位階下令)。</li>
+  </ul>
+
+  <h2>感情線A(政治聯姻式):妃嵐女王 × 格倫・諾維</h2>
+  <p><b>格倫・諾維(Glenn Norwood)</b>——男,32歲,<a class="wl" href="#race-human">人族</a>——是<a class="wl" href="#pathfinders-hold">拓境行會</a>
+  護衛隊長,奉派保護跨域同盟隊伍。</p>
+  <p><a class="wl" href="#royal-lineages">妃嵐女王</a>被爐主派系施壓,必須考慮聯姻以鞏固政權,但她私下對格倫懷有隱而未宣的情感。
+  這段感情從一開始就被視為「不可能」,不只因為門第,更因為<a class="wl" href="#race-human">人族</a>在艾瑟瑞亞至今仍未被完全視為
+  「真正的居民」。這條線的政治重量在於:妃嵐願不願意在公開場合承認這段感情,某種程度上就是她願不願意真正打破
+  「人族是外人」這個大陸共識的試金石。</p>
+  <p>收尾安排在終章「新生代的黎明」——她不必然要嫁給格倫,但可以藉由某個公開場合的舉動(例如破格冊封他,或公開致謝時刻意打破慣例),
+  暗示她選擇的不只是私人感情,而是一種政治姿態,呼應亞拉岡加冕後才能光明正大迎娶亞玟的邏輯:身分與感情彼此綁定。</p>
+
+  <h2>感情線B(戰火中萌生):妲莉亞・渥登 × 柳因</h2>
+  <p><b>妲莉亞・渥登(Daria Voldrenn)</b>——女,29歲,<a class="wl" href="#race-drow">黑暗精靈</a>——是<a class="wl" href="#char-syra">賽拉</a>的堂妹,
+  <a class="wl" href="#nation-umbral">黑淵母邦</a>士兵;<b>柳因(Lyien)</b>——男,表觀25歲,<a class="wl" href="#race-dryads">樹精</a>(樹精壽命長,
+  25歲對他而言仍是初出茅廬的「幼樹」階段)——是<a class="wl" href="#nation-rootreach">根都</a>樹精護根者學徒。</p>
+  <p>兩人在<a class="wl" href="#saga-part2">第二部</a>第10章「根都之危」的戰役中並肩作戰而相識。妲莉亞厭倦了黑淵母邦內部因為
+  真理教派系鬥爭而永無止盡的猜忌與算計;柳因則對根都表面中立、實則對某些真相刻意隱瞞感到失望。兩人都是各自體制裡
+  「清醒卻無力」的年輕人,在共同見證死亡與虛偽之後互相取暖。</p>
+  <p>這條線的功能是象徵陰影與光明兩個信仰陣營的和解——一個黑暗精靈與一個樹精的結合,本身就是對「
+  <a class="wl" href="#pantheon-faith">永夜真理教 vs 世界樹信仰</a>」對立敘事最溫柔的反駁。終章安排一段小插曲,暗示兩人決定
+  共同在永夜深淵與晶夢花海交界處定居,實質成為兩域和解的活生生象徵。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#蕾雅</span><span class="tag">#維岡</span><span class="tag">#三部曲大綱</span>
+  </div>
+  `
+},
+
+/* ---------------- 戰役與對決 ---------------- */
+'battle-ambush':{
+  title:'伏擊戰', category:'戰役與對決', domain:null, tags:['戰役','第一部','小規模遭遇戰'],
+  alt:'第一部第13章 · 山林隘口遭遇戰',
+  infobox:{'章節':'<a class="wl" href="#saga-part1">第一部</a>第13章','規模':'小規模遭遇戰(15-20人)','地點':'前往隱居影魅住處途中的山林隘口','陣亡':'<a class="wl" href="#char-grien">格里恩老護根者</a>'},
+  body:`
+  <p>全書第一場正式戰鬥,規模刻意壓在小規模遭遇戰,用來初次具體展示<a class="wl" href="#legendary-artifacts">闇蝕之心</a>碎片的
+  污染性,同時讓五名主角首次以隊伍形式協同作戰。</p>
+
+  <h2>敵方</h2>
+  <p>15-20名<a class="wl" href="#pantheon-faith">永夜真理教</a>激進派士兵,由一名一次性敵方小頭目率領,配備會吸收溫度與魔力的
+  粗製闇蝕晶片武器。</p>
+
+  <h2>戰鬥流程</h2>
+  <ul>
+    <li><a class="wl" href="#char-nyle">奈爾</a>率先感應到闇蝕晶片那種「反向吞噬」的共鳴波動,提前數秒示警——這是他第一次讓隊伍
+    真正意識到自己有用,而不只是需要提防的對象。</li>
+    <li><a class="wl" href="#char-vygan">維岡</a>使用<a class="wl" href="#race-dragonkin">龍女</a>祖傳的「熾魂突襲」戰術
+    (呼應<a class="wl" href="#event-sky-war">天穹之戰</a>中伊格妮絲一世的原創戰法)正面突破敵方前排。</li>
+    <li><a class="wl" href="#char-syra">賽拉</a>運用黑暗精靈天生的暗影魔法製造混亂與致盲效果。</li>
+    <li><a class="wl" href="#char-vero">薇珞</a>召喚根系纏繞術困住逃竄的敵兵,為後面的審訊留活口。</li>
+    <li><a class="wl" href="#char-reya">蕾雅</a>——沒有魔力,靠工程知識切斷繩橋、引發小規模落石阻斷敵方援軍,展現
+    <a class="wl" href="#race-human">人族</a>「靠本事而非魔力」的定位。</li>
+  </ul>
+
+  <h2>代價</h2>
+  <p><a class="wl" href="#char-grien">格里恩老護根者</a>——在<a class="wl" href="#saga-part1">第一部</a>第4章確認碎片身分的資深
+  護根者,親自隨隊追查——於此役殿後掩護隊伍撤退,力戰而死。這是全書第一個真正的犧牲,讓「懸賞」不再只是抽象的任務,
+  而是有血有肉的代價。</p>
+
+  <h2>結果</h2>
+  <p>隊伍慘勝,俘虜一名敵兵,為第14章「破碎的預言」的逼供鋪路。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#第一部</span><span class="tag">#闇蝕之心</span><span class="tag">#格里恩老護根者</span>
+  </div>
+  `
+},
+'battle-rootreach':{
+  title:'根都之危', category:'戰役與對決', domain:'bloom', tags:['戰役','第二部','據點防衛戰'],
+  alt:'第二部第10章 · 根都防衛戰',
+  infobox:{'章節':'<a class="wl" href="#saga-part2">第二部</a>第10章','規模':'據點防衛戰','地點':'<a class="wl" href="#nation-rootreach">根都</a>','陣亡':'<a class="wl" href="#char-hodgan">赫崗長老</a>'},
+  body:`
+  <p>一次較小規模的<a class="wl" href="#magic-system">魔力潮汐</a>期間,<a class="wl" href="#pantheon-faith">永夜真理教</a>武力
+  (因<a class="wl" href="#char-vannis">凡尼斯</a>洩漏的防禦時程表而精準得手)突襲根都,意圖搶奪當年產量正在下滑的
+  <a class="wl" href="#legendary-artifacts">世界樹之淚</a>。</p>
+
+  <h2>戰鬥流程</h2>
+  <p>樹精大長老塞倫統籌護根者防禦,<a class="wl" href="#char-syra">賽拉</a>臨時召集<a class="wl" href="#nation-umbral">黑淵母邦</a>
+  內部忠於正統的人馬支援。<a class="wl" href="#char-relationships">妲莉亞與柳因</a>在此戰中初次並肩作戰,是兩人感情線的起點。</p>
+  <p>外牆結界被突破時,<a class="wl" href="#char-hodgan">赫崗長老</a>——原本只是抱持懷疑態度隨行觀察的熔焰王國保守派老爐主——
+  身先士卒堵住缺口,為世界樹之淚的搶救與平民撤離爭取時間,力戰而死。</p>
+  <p>戰鬥中意外截獲一則加密訊息,牽連<a class="wl" href="#nation-covenant">契約王朝</a>洩密——這是第11章「破綻」的引爆點。</p>
+
+  <h2>魔法對決看點</h2>
+  <p><a class="wl" href="#char-syra">賽拉</a>被迫用自己族群的「晶石脈動文」破界技巧對抗母邦本族的防禦工事,是她個人立場的直接考驗;
+  <a class="wl" href="#char-reya">蕾雅</a>用<a class="wl" href="#legendary-artifacts">拓境羅盤</a>的精密度校正熔焰投石器的彈道,
+  再次體現人族的戰場定位不是靠魔力,是靠腦子。</p>
+
+  <h2>赫崗之死的意義</h2>
+  <p>他生前反對女王插手這場跨域同盟,死後他的犧牲事蹟傳回<a class="wl" href="#nation-pyraxis">熔焰王廷</a>,反而成了說服保守
+  爐主派系的關鍵——他用死亡完成了生前爭論做不到的事。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#第二部</span><span class="tag">#根都</span><span class="tag">#赫崗長老</span>
+  </div>
+  `
+},
+'battle-worldtree':{
+  title:'世界樹下的圍城與渴望之選', category:'戰役與對決', domain:null, tags:['戰役','第三部','高潮決戰'],
+  alt:'第三部第8-10章 · 全書高潮戰役',
+  infobox:{'章節':'<a class="wl" href="#saga-part3">第三部</a>第8-10章','規模':'五域全面會戰','地點':'世界樹周邊','陣亡':'<a class="wl" href="#char-ashmother">灰母</a>、<a class="wl" href="#char-grayspeaker">灰語者</a>'},
+  body:`
+  <p>全書規模最大的戰役,五域全部出兵,<a class="wl" href="#royal-lineages">妃嵐女王</a>親征,<a class="wl" href="#nation-umbral">黑淵母邦</a>
+  同時爆發內戰(<a class="wl" href="#char-syra">賽拉</a>一派 vs 真理教同情者),敵方以「濁魔力構裝體」
+  (闇蝕碎片喚醒的污染魔力構造體,作為大量消耗型雜兵)為前鋒。</p>
+
+  <h2>關鍵轉折</h2>
+  <p><a class="wl" href="#char-ashmother">灰母</a>——影裔殘部真正的領袖,道德複雜的悲劇人物——率領一批從未參與過叛亂的
+  <a class="wl" href="#race-shadowkin">影魅</a>趕到戰場,起初被誤認為敵軍,隨即證實他們是來阻止<a class="wl" href="#char-grayspeaker">灰語者</a>的。
+  她最終死守一處潰堤缺口,用生命換取隊伍抵達闇蝕之心核心的時間——用犧牲替全體影魅洗刷污名。</p>
+  <p>隊伍抵達核心時,發現<a class="wl" href="#char-vannis">凡尼斯</a>早已潛入,企圖獨吞重組完成的<a class="wl" href="#legendary-artifacts">闇蝕之心</a>
+  為契約王朝謀利。他在與灰語者的爭執中被當場揭穿身分,證據被及時趕到的<a class="wl" href="#royal-lineages">薇夏</a>親眼目睹,
+  她的心腹背叛徹底曝光——凡尼斯未死,而是當眾遭薇夏罷黜問罪,政治性的身敗名裂比死亡更符合他投機者的定位。</p>
+
+  <h2>最終對決:奈爾 vs 灰語者</h2>
+  <p><a class="wl" href="#char-grayspeaker">灰語者</a>——真理教真正的幕後主謀,原是受人尊敬的世界樹信仰祭司,因過去在一次魔力潮汐
+  災難中失去家人而轉向異端——企圖以自身生命力徹底喚醒闇蝕之心。<a class="wl" href="#char-nyle">奈爾</a>認出他:灰語者正是當年
+  引誘奈爾加入真理教的引路人,私人恩怨讓奈爾成為唯一能與他對抗的人。</p>
+  <p>奈爾選擇用自己與闇蝕之心的「回聲」連結從內部瓦解控制(重傷但存活,從此留下永久印記)。灰語者拒絕被救贖,最終被自己
+  企圖掌控的污染力量反噬吞沒而死——與奈爾「選擇連結而非繼續自我懲罰」的救贖弧線形成鮮明對照。</p>
+
+  <h2>渴望之選</h2>
+  <p>最終成功的關鍵,是<a class="wl" href="#char-vygan">維岡</a>不假思索地聽從<a class="wl" href="#char-reya">蕾雅</a>的戰術判斷
+  (呼應決戰前夕託劍的信任鋪墊),而非憑位階強行下令——解法「長」在角色已經走過的路上,而非憑空出現。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#第三部</span><span class="tag">#闇蝕之心</span><span class="tag">#灰母</span><span class="tag">#灰語者</span>
+  </div>
+  `
+},
+
+/* ---------------- 角色誌:反派與關鍵配角 ---------------- */
+'char-grien':{
+  title:'格里恩老護根者', category:'角色誌', domain:'bloom', tags:['配角','根都','陣亡'],
+  alt:'Elder Grien · 第一部陣亡',
+  infobox:{'性別':'男','年齡':'210歲','種族':'<a class="wl" href="#race-dryads">樹精</a>','陣營':'<a class="wl" href="#nation-rootreach">根都</a>護根者','結局':'<a class="wl" href="#battle-ambush">伏擊戰</a>中殿後陣亡','登場':'<a class="wl" href="#saga-part1">第一部</a>第4章'},
+  body:`
+  <p>格里恩是<a class="wl" href="#saga-part1">第一部</a>第4章「根都的召見」中確認闇蝕之心碎片身分的資深護根者,
+  行事嚴謹、話不多,親自隨隊追查以求第一手驗證,是隊伍最初能取得根都信任的關鍵人物。</p>
+  <h2>結局</h2>
+  <p>於<a class="wl" href="#battle-ambush">伏擊戰</a>中殿後掩護隊伍撤退,力戰而死——全書第一個真正的犧牲,
+  讓闇蝕之心的威脅從抽象懸念,變成有血有肉的代價。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#根都</span><span class="tag">#伏擊戰</span>
+  </div>
+  `
+},
+'char-hodgan':{
+  title:'赫崗長老', category:'角色誌', domain:'ember', tags:['配角','熔焰王國','保守派','陣亡'],
+  alt:'Elder Hodgan · 第二部陣亡',
+  infobox:{'性別':'男','年齡':'表觀58歲','種族':'<a class="wl" href="#race-dragonkin">龍女</a>','陣營':'<a class="wl" href="#nation-pyraxis">熔焰王國</a>保守派爐主','立場':'反對女王插手跨域同盟','結局':'<a class="wl" href="#battle-rootreach">根都之危</a>中力戰而死'},
+  body:`
+  <p>赫崗是熔焰王國「爐火議會」中資歷最深的保守派爐主之一,一貫主張龍女應專注鞏固炙炎山脈本土,反對
+  <a class="wl" href="#royal-lineages">妃嵐女王</a>將資源投入一場「未經證實的預言」。他隨行前往根都,原意僅是抱持懷疑態度
+  親自觀察,確保王國利益不被輕率消耗。</p>
+
+  <h2>個性細節</h2>
+  <p>說話總帶著長輩式的訓誡口吻,私底下其實對妃嵐這位年輕女王抱有一種矛盾的關切——嘴上不留情面,行動上卻始終
+  沒有真正阻撓過她。</p>
+  <h2>結局</h2>
+  <p>於<a class="wl" href="#battle-rootreach">根都之危</a>外牆結界被突破時,身先士卒堵住缺口,為世界樹之淚的搶救與平民撤離
+  爭取時間,力戰而死。他生前反對的立場,死後卻因這場犧牲成為說服保守爐主派系轉向支持女王的關鍵——用死亡完成了
+  生前爭論做不到的事。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王國</span><span class="tag">#根都之危</span>
+  </div>
+  `
+},
+'char-vannis':{
+  title:'凡尼斯', category:'角色誌', domain:'abyss', tags:['配角','契約王朝','反派','投機者'],
+  alt:'Vannis · 薇夏心腹謀士',
+  infobox:{'性別':'男','年齡':'表觀40歲','種族':'<a class="wl" href="#race-lilith">魅魔</a>','陣營':'<a class="wl" href="#nation-covenant">契約王朝</a>薇夏心腹謀士','動機':'純粹投機,不信奉永夜真理教教義','結局':'<a class="wl" href="#battle-worldtree">世界樹下決戰</a>中被當眾揭穿,罷黜問罪'},
+  body:`
+  <p>凡尼斯是<a class="wl" href="#royal-lineages">薇夏(莉莉絲七世)</a>最信任的心腹謀士,長年輔佐她處理契約王朝與外域的
+  微妙關係。他不信奉<a class="wl" href="#pantheon-faith">永夜真理教</a>的教義,對他而言,與真理教勢力暗中交易純粹是政治算計——
+  他擔心契約王朝若不搶先布局,將在這場跨域同盟中被邊緣化,於是私下與敵對勢力談判換取籌碼,並在
+  <a class="wl" href="#battle-rootreach">根都之危</a>中洩漏了防禦時程表。</p>
+
+  <h2>個性細節</h2>
+  <p>談吐圓滑,永遠先順著對方的話說,再悄悄把話題引導到對自己有利的方向,是宮廷式謀士的典型作風——這種圓滑最終也是
+  他露出馬腳的原因,因為他從未真心信任過任何一方,包括自己效忠的薇夏。</p>
+  <h2>結局</h2>
+  <p>在<a class="wl" href="#battle-worldtree">世界樹下的決戰</a>中,他潛入試圖獨吞重組完成的闇蝕之心為契約王朝謀利,
+  卻在與<a class="wl" href="#char-grayspeaker">灰語者</a>的爭執中被當場揭穿身分。證據被薇夏親眼目睹,她的心腹背叛就此曝光。
+  凡尼斯未死,而是當眾遭罷黜問罪——政治性的身敗名裂,比死亡更符合他投機者的定位,也讓薇夏的攤牌有一個活生生的對象
+  可以直接對峙。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#契約王朝</span><span class="tag">#世界樹下的圍城</span>
+  </div>
+  `
+},
+'char-ashmother':{
+  title:'灰母', category:'角色誌', domain:'abyss', tags:['配角','影裔殘部','影魅','陣亡'],
+  alt:'Ashmother · 影裔殘部真正的領袖',
+  infobox:{'性別':'女','年齡':'外觀近似人類60歲,實際歲數不可考(影魅特性,詳見種族頁)','種族':'<a class="wl" href="#race-shadowkin">影魅</a>','陣營':'<a class="wl" href="#unclaimed-territories">影裔殘部</a>中未參與叛亂的一支','結局':'<a class="wl" href="#battle-worldtree">世界樹下的圍城</a>死守缺口,力戰而死'},
+  body:`
+  <p>灰母是影裔殘部內部一支從未參與紀元5890「<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>」的影魅所擁戴的領袖,
+  長年帶領族人在未圖之境邊緣過著與世無爭的隱居生活,對抗的不只是外界的鎮壓,更是同族內部逐漸被
+  <a class="wl" href="#char-grayspeaker">灰語者</a>煽動的激進派系。</p>
+
+  <h2>個性細節</h2>
+  <p>言語不多但每句都有份量,族人形容她「開口就是判決」——長年在夾縫中守護族群的處境,讓她習慣獨自承擔決策的重量,
+  鮮少解釋自己的理由。</p>
+  <h2>結局</h2>
+  <p>於<a class="wl" href="#battle-worldtree">世界樹下的圍城</a>中,率領族人趕赴戰場阻止灰語者,起初被友軍誤認為敵軍,
+  隨即證實他們的立場。她最終死守一處潰堤缺口,用生命換取隊伍抵達闇蝕之心核心的時間——用犧牲替全體
+  <a class="wl" href="#race-shadowkin">影魅</a>洗刷了長年的集體污名,是全書「並非所有影魅都是敵人」主題的最終落實。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#影裔殘部</span><span class="tag">#影魅</span><span class="tag">#世界樹下的圍城</span>
+  </div>
+  `
+},
+'char-grayspeaker':{
+  title:'灰語者', category:'角色誌', domain:'abyss', tags:['反派','永夜真理教','幕後主謀','陣亡'],
+  alt:'Grayspeaker · 永夜真理教幕後主謀',
+  infobox:{'性別':'男','年齡':'380歲(黑暗精靈壽命可達400餘年)','種族':'<a class="wl" href="#race-drow">黑暗精靈</a>','陣營':'<a class="wl" href="#pantheon-faith">永夜真理教</a>幕後主謀','背景':'原為受人尊敬的世界樹信仰祭司','結局':'<a class="wl" href="#battle-worldtree">世界樹下決戰</a>被自身力量反噬而死'},
+  body:`
+  <p>灰語者曾是備受敬重的<a class="wl" href="#pantheon-faith">世界樹信仰</a>祭司,直到一次<a class="wl" href="#magic-system">魔力潮汐</a>
+  災難中失去了摯愛的家人——官方教團無法給出令他信服的解釋,他因此轉向「永夜才是太虛真正本質」的異端教義,
+  逐漸成為<a class="wl" href="#pantheon-faith">永夜真理教</a>真正的幕後主謀,長年隱身於<a class="wl" href="#nation-umbral">黑淵母邦</a>
+  體制陰影之下。多年前,正是他引誘年輕的<a class="wl" href="#char-nyle">奈爾</a>加入真理教。</p>
+
+  <h2>個性細節</h2>
+  <p>語氣溫和、極少動怒,擅長用近似牧者關懷的口吻包裝激進主張——這種溫和恰恰是他最危險的地方,連
+  <a class="wl" href="#char-nyle">奈爾</a>當年也是被這份「理解」而非恐懼說服加入。</p>
+  <h2>結局</h2>
+  <p>於<a class="wl" href="#battle-worldtree">世界樹下的圍城</a>高潮,他企圖以自身生命力徹底喚醒重組完成的
+  <a class="wl" href="#legendary-artifacts">闇蝕之心</a>。奈爾認出昔日引路人,私人恩怨讓他成為唯一能與灰語者正面對抗的人。
+  灰語者拒絕奈爾伸出的救贖之手,最終被自己企圖掌控的污染力量反噬吞沒而死——與奈爾「選擇連結而非繼續自我懲罰」的
+  救贖弧線形成鮮明對照。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜真理教</span><span class="tag">#奈爾</span><span class="tag">#世界樹下的圍城</span>
+  </div>
+  `
+},
+
+/* ---------------- 角色誌:熔焰王朝歷代女王 ---------------- */
+'char-ignis':{
+  title:'伊格妮絲一世', category:'角色誌', domain:'ember', tags:['角色','熔焰王朝','初代女王'],
+  alt:'Ignis I, the Skybreaker · 熔焰王朝初代女王',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-dragonkin">龍女</a>','身分':'<a class="wl" href="#nation-pyraxis">熔焰王朝</a>初代女王','在位':'紀元1200年後','登場事件':'<a class="wl" href="#event-sky-war">天穹之戰</a>'},
+  body:`
+  <p>伊格妮絲原是<a class="wl" href="#domain-ember">炙炎山脈</a>眾多氏族戰士之一,在<a class="wl" href="#event-sky-war">天穹之戰</a>
+  危急時刻自創「熾魂突襲」戰術力挽狂瀾,戰後被推舉為初代熔焰女王,統一原本各自為政的龍女氏族。</p>
+  <h2>個性</h2>
+  <p>作風直接、不耐宮廷辭令,是典型的「戰場上的領袖」——她建立王國制度,卻始終不太習慣治理本身,傳說她晚年常把政務
+  交給議會,自己則長年遊歷炙炎山脈邊境。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王朝</span><span class="tag">#天穹之戰</span><span class="tag">#破天槍</span>
+  </div>
+  `
+},
+'char-vyra':{
+  title:'微拉女王', category:'角色誌', domain:'ember', tags:['角色','熔焰王朝','第15代'],
+  alt:'Queen Vyra · 熔焰王朝第15代女王',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-dragonkin">龍女</a>','身分':'<a class="wl" href="#nation-pyraxis">熔焰王朝</a>第15代女王','在位':'紀元3780前後','登場事件':'<a class="wl" href="#event-grand-concord">大交融協定</a>'},
+  body:`
+  <p>微拉是熔焰王朝第一位以「談判」而非「戰功」聞名的女王,代表熔焰王國簽署<a class="wl" href="#event-grand-concord">大交融協定</a>,
+  結束了長期的域間猜忌。</p>
+  <h2>個性</h2>
+  <p>耐心、擅長傾聽,與初代女王伊格妮絲的戰士作風形成鮮明對比,是熔焰王朝歷史上少見「以柔克剛」的統治者典範。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王朝</span><span class="tag">#大交融協定</span>
+  </div>
+  `
+},
+'char-camilla':{
+  title:'卡蜜拉女王', category:'角色誌', domain:'ember', tags:['角色','熔焰王朝','第29代'],
+  alt:'Queen Camilla · 熔焰王朝第29代女王',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-dragonkin">龍女</a>','身分':'<a class="wl" href="#nation-pyraxis">熔焰王朝</a>第29代女王','在位':'紀元5890前後','登場事件':'<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>'},
+  body:`
+  <p>卡蜜拉是領軍參與五域聯合鎮壓<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>的三位君主之一,是熔焰王朝史上
+  少數願意主動與其他政體軍事合作的統治者。</p>
+  <h2>個性</h2>
+  <p>果斷務實,不拘泥於「龍女該獨自解決龍女的事」這種傳統思維,深信危機當前,結盟比單打獨鬥更符合王國長遠利益。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王朝</span><span class="tag">#影之叛亂</span>
+  </div>
+  `
+},
+'char-feyla':{
+  title:'妃嵐', category:'角色誌', domain:'ember', tags:['角色','熔焰王朝','現任女王'],
+  alt:'Queen Feyla · 熔焰王朝現任女王(第38代)',
+  infobox:{'性別':'女','年齡':'24歲','種族':'<a class="wl" href="#race-dragonkin">龍女</a>','身分':'<a class="wl" href="#nation-pyraxis">熔焰王朝</a>第38代女王(現任)','即位':'紀元6180'},
+  body:`
+  <p>妃嵐是熔焰王朝目前最年輕的統治者之一,即位以來一直夾在恪守武功傳統的<a class="wl" href="#char-hodgan">爐主派系</a>
+  與自己想開創新局的理念之間。她是<a class="wl" href="#flagship-saga">三部曲</a>中決定是否公開支持跨域同盟的關鍵人物。</p>
+  <h2>個性</h2>
+  <p>真誠、理想主義,但常因經驗不足而在朝堂鬥爭中顯得猶豫;私下對<a class="wl" href="#char-relationships">格倫·諾維</a>
+  懷有隱而未宣的情感,這段感情某種程度上也是她「願不願意打破人族是外人這個大陸共識」的試金石。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王朝</span><span class="tag">#人際關係與感情線</span>
+  </div>
+  `
+},
+
+/* ---------------- 角色誌:契約王朝歷代莉莉絲 ---------------- */
+'char-lilith1':{
+  title:'莉莉絲一世', category:'角色誌', domain:'abyss', tags:['角色','契約王朝','初代女王'],
+  alt:'Lilith I, the Night Queen · 契約王朝初代女王',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-lilith">魅魔</a>','身分':'<a class="wl" href="#nation-covenant">契約王朝</a>初代女王','即位':'紀元3120','登場事件':'<a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>'},
+  body:`
+  <p>由始祖<a class="wl" href="#creature-lilithshadow">莉莉絲之影</a>親自冊立的第一任「莉莉絲」,正式建立契約王朝與
+  「情慾契約」制度,將原本混亂的永夜深淵秩序化。</p>
+  <h2>個性</h2>
+  <p>魅力超群、意志堅定,是後世所有莉莉絲女王效法的原型——後代女王加冕時沿用「莉莉絲」稱號,某種程度上正是想
+  召喚她當年那股讓夜語者心悅誠服的凝聚力。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#契約王朝</span><span class="tag">#莉莉絲降臨</span>
+  </div>
+  `
+},
+'char-lilith3':{
+  title:'莉莉絲三世', category:'角色誌', domain:'abyss', tags:['角色','契約王朝','第三代'],
+  alt:'Lilith III · 契約王朝第三代女王',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-lilith">魅魔</a>','身分':'<a class="wl" href="#nation-covenant">契約王朝</a>第三代女王','在位':'紀元3780前後','登場事件':'<a class="wl" href="#event-grand-concord">大交融協定</a>'},
+  body:`
+  <p>代表契約王朝簽署<a class="wl" href="#event-grand-concord">大交融協定</a>,是永夜深淵首次以正式外交身分融入
+  跨域和平體系的關鍵推手。</p>
+  <h2>個性</h2>
+  <p>精明世故,擅長在契約條文的字裡行間為契約王朝爭取最大利益,談判風格影響了後世莉莉絲女王處理外交事務的基調。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#契約王朝</span><span class="tag">#大交融協定</span>
+  </div>
+  `
+},
+'char-lilith5':{
+  title:'莉莉絲五世', category:'角色誌', domain:'abyss', tags:['角色','契約王朝','第五代'],
+  alt:'Lilith V · 契約王朝第五代女王',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-lilith">魅魔</a>','身分':'<a class="wl" href="#nation-covenant">契約王朝</a>第五代女王','在位':'紀元5890前後','登場事件':'<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>'},
+  body:`
+  <p>領軍參與五域聯合鎮壓<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>的三位君主之一,展現契約王朝在危機時刻
+  願意暫擱與黑淵母邦的競爭關係、共同應對外部威脅的務實一面。</p>
+  <h2>個性</h2>
+  <p>冷靜、擅長在混亂中快速權衡利弊,是契約王朝歷史上少數以軍事決斷力聞名而非以契約謀略聞名的女王。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#契約王朝</span><span class="tag">#影之叛亂</span>
+  </div>
+  `
+},
+'char-vesha':{
+  title:'薇夏(莉莉絲七世)', category:'角色誌', domain:'abyss', tags:['角色','契約王朝','現任女王'],
+  alt:'Vesha, Lilith VII · 契約王朝現任女王',
+  infobox:{'性別':'女','年齡':'89歲','種族':'<a class="wl" href="#race-lilith">魅魔</a>','身分':'<a class="wl" href="#nation-covenant">契約王朝</a>第七代女王(現任)','心腹':'<a class="wl" href="#char-vannis">凡尼斯</a>'},
+  body:`
+  <p>薇夏是現任契約王朝女王,登基後依傳統加冕為「莉莉絲七世」。她長年活在始祖與六位前任女王的盛名陰影下,
+  對契約王朝在跨域政治中被邊緣化懷有深層的焦慮——這份焦慮正是她默許心腹<a class="wl" href="#char-vannis">凡尼斯</a>
+  暗中與敵對勢力談判的根本動機。</p>
+  <h2>個性</h2>
+  <p>野心與不安交織的灰色人物——並非純粹反派,而是野心與生存焦慮驅使下逐漸失控的統治者。當背叛真相在
+  <a class="wl" href="#battle-worldtree">世界樹下決戰</a>中曝光,她必須在政治算計與良知之間攤牌抉擇。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#契約王朝</span><span class="tag">#凡尼斯</span><span class="tag">#世界樹下的圍城</span>
+  </div>
+  `
+},
+
+/* ---------------- 角色誌:黑淵母邦 ---------------- */
+'char-umbrys':{
+  title:'陰紗', category:'角色誌', domain:'abyss', tags:['角色','黑淵母邦','開國暗后'],
+  alt:'Umbrys the Founder · 黑淵母邦開國暗后',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-drow">黑暗精靈</a>','身分':'<a class="wl" href="#nation-umbral">黑淵母邦</a>開國暗后','建國':'紀元1450'},
+  body:`
+  <p>陰紗統一了永夜深淵原本分散交戰的黑暗精靈部族,建立黑淵母邦——某種程度上是對<a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>
+  後契約王朝崛起的回應與制衡。</p>
+  <h2>個性</h2>
+  <p>冷酷而精於算計,深信唯有絕對的階級秩序才能防止黑暗精靈重蹈部族分裂交戰的覆轍,這種統治哲學至今仍深刻影響黑淵母邦的
+  政治文化。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#黑淵母邦</span><span class="tag">#莉莉絲降臨</span>
+  </div>
+  `
+},
+'char-cyanessa':{
+  title:'賽妮絲', category:'角色誌', domain:'abyss', tags:['角色','黑淵母邦','現任暗后'],
+  alt:'Cyanessa · 黑淵母邦現任暗后',
+  infobox:{'性別':'女','年齡':'210歲','種族':'<a class="wl" href="#race-drow">黑暗精靈</a>','身分':'<a class="wl" href="#nation-umbral">黑淵母邦</a>現任暗后'},
+  body:`
+  <p>賽妮絲是現任黑淵母邦統治者,長年走鋼索式地平衡「不能對內部<a class="wl" href="#pantheon-faith">永夜真理教</a>派系示弱」
+  與「不想真的爆發內戰」兩端——這種平衡在<a class="wl" href="#saga-part3">第三部</a>因<a class="wl" href="#char-syra">賽拉</a>
+  一派與真理教同情者的正面衝突而被迫攤牌。</p>
+  <h2>個性</h2>
+  <p>高深莫測,極少表露真實立場,擅長讓對手(包括自己的臣屬)永遠猜不透她下一步的盤算,是黑淵母邦式權謀的最高體現。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#黑淵母邦</span><span class="tag">#永夜真理教</span><span class="tag">#賽拉</span>
+  </div>
+  `
+},
+
+/* ---------------- 角色誌:各政體代表 ---------------- */
+'char-frost':{
+  title:'寒霜', category:'角色誌', domain:'lunar', tags:['角色','月伏部落聯盟','月牙首領'],
+  alt:'Frost · 大交融協定月伏部落聯盟代表',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-lunarfang">狼女</a>','身分':'<a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>月牙首領','登場事件':'<a class="wl" href="#event-grand-concord">大交融協定</a>'},
+  body:`
+  <p>代表月伏部落聯盟出席<a class="wl" href="#event-grand-concord">大交融協定</a>簽署的月牙首領,以直言不諱聞名,
+  是談判桌上少數敢於當面質疑其他域代表誠意的與會者,卻也因此贏得各方尊重。</p>
+  <h2>個性</h2>
+  <p>恪守榮譽、厭惡拐彎抹角,認為協定的價值不在辭藻優美,而在雙方是否真心願意遵守。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月伏部落聯盟</span><span class="tag">#大交融協定</span>
+  </div>
+  `
+},
+'char-springwhisper':{
+  title:'春語', category:'角色誌', domain:'bloom', tags:['角色','花瓣聯盟','當季代表'],
+  alt:"Spring's Whisper · 大交融協定花瓣聯盟代表",
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-bloomsprites">花精</a>','身分':'<a class="wl" href="#nation-petalconcord">花瓣聯盟</a>當季(春季)代表','登場事件':'<a class="wl" href="#event-grand-concord">大交融協定</a>'},
+  body:`
+  <p>代表花瓣聯盟出席<a class="wl" href="#event-grand-concord">大交融協定</a>簽署的春季輪值代表,說話總帶著花開花謝的隱喻,
+  讓習慣直來直往的其他域代表一度摸不清她的真實立場,卻也因這種詩意的談判風格緩和了會場的緊張氣氛。</p>
+  <h2>個性</h2>
+  <p>飄逸、樂觀,深信任何僵局都只是「尚未到花期」,對長期承諾抱持花精特有的豁達——反正下一季自會有新的代表接手。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#花瓣聯盟</span><span class="tag">#大交融協定</span>
+  </div>
+  `
+},
+'char-coralie':{
+  title:'珂拉莉', category:'角色誌', domain:'trench', tags:['角色','歌詠議會','大合唱長'],
+  alt:'Coralie · 歌詠議會現任大合唱長',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-sirens">海妖</a>','身分':'<a class="wl" href="#nation-choral">歌詠議會</a>大合唱長(現任)','法器':'<a class="wl" href="#legendary-artifacts">光歌鯨骨笛</a>'},
+  body:`
+  <p>珂拉莉是現任歌詠議會最高地位者,也是全大陸唯一有資格吹奏<a class="wl" href="#legendary-artifacts">光歌鯨骨笛</a>的人。
+  她曾代表歌詠議會出席<a class="wl" href="#event-grand-concord">大交融協定</a>簽署。</p>
+  <h2>個性</h2>
+  <p>沉穩、極度重視和諧,說話前總會先「聆聽」——包括聆聽沉默本身——是海妖「合唱共識」決策文化最極致的體現者。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#歌詠議會</span><span class="tag">#光歌鯨骨笛</span>
+  </div>
+  `
+},
+'char-kane':{
+  title:'凱恩・灰旅', category:'角色誌', domain:null, tags:['角色','人族','拓境城創始人'],
+  alt:'Kane Greytrail · 拓境城創始人',
+  infobox:{'性別':'男','種族':'<a class="wl" href="#race-human">人族</a>','身分':'<a class="wl" href="#pathfinders-hold">拓境城</a>創始人','活躍年代':'紀元850前後(已故)','後裔':'<a class="wl" href="#char-reya">蕾雅・灰旅</a>'},
+  body:`
+  <p>凱恩是隨人族一同墜入艾瑟瑞亞的倖存者之一,在<a class="wl" href="#unclaimed-territories">雲隙荒境</a>建立起第一個人族據點,
+  即後來的<a class="wl" href="#pathfinders-hold">拓境城</a>,並打造了<a class="wl" href="#legendary-artifacts">拓境羅盤</a>原型,
+  被尊為拓境行會聯合的精神創始人。</p>
+  <h2>個性</h2>
+  <p>務實、resourceful,面對毫無魔力可依恃的處境,選擇靠工藝與觀察力開闢生路——這份「不靠天賦、只靠雙手」的精神,
+  至今仍是拓境城文化的核心,也直接體現在後裔<a class="wl" href="#char-reya">蕾雅</a>身上。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#拓境城</span><span class="tag">#拓境羅盤</span><span class="tag">#蕾雅</span>
+  </div>
+  `
+},
+'char-ashflame':{
+  title:'灰焰長老', category:'角色誌', domain:'ember', tags:['角色','焰狐盟','輪值代表'],
+  alt:'Ashflame Elder · 焰狐盟現任輪值代表',
+  infobox:{'性別':'男','種族':'炎狐','身分':'<a class="wl" href="#nation-kindling">焰狐盟</a>輪值代表(現任)'},
+  body:`
+  <p>灰焰是現任焰狐盟輪值代表,負責與<a class="wl" href="#nation-pyraxis">熔焰王國</a>交涉貿易與軍事保護協議的細節。</p>
+  <h2>個性</h2>
+  <p>老練圓融,擅長用長期信譽換取短期讓步——他常說「跟龍女打交道,吵贏一次不如信任十年」,是焰狐盟協商文化的代表人物。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#焰狐盟</span><span class="tag">#炎狐</span>
+  </div>
+  `
+},
+'char-silvyia':{
+  title:'希爾薇亞', category:'角色誌', domain:'lunar', tags:['角色','月伏部落聯盟','月牙首領'],
+  alt:'Silvyia · 月伏部落聯盟現任月牙首領',
+  infobox:{'性別':'女','年齡':'45歲','種族':'<a class="wl" href="#race-lunarfang">狼女</a>','身分':'<a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>現任月牙首領'},
+  body:`
+  <p>希爾薇亞是現任月伏部落聯盟最高領袖,在紀元2450「<a class="wl" href="#history">月之狂亂</a>」的動盪記憶仍深植部落集體
+  意識的背景下,以強力手腕重整聯盟秩序聞名。</p>
+  <h2>個性</h2>
+  <p>保護欲強、不容挑戰其權威,但對族人私底下極為體貼——治理風格是「對外強硬,對內溫暖」。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月伏部落聯盟</span><span class="tag">#月之狂亂</span>
+  </div>
+  `
+},
+'char-fuyue':{
+  title:'芙月', category:'角色誌', domain:'lunar', tags:['角色','夢絲城','首席長老'],
+  alt:'Fuyue · 夢絲城首席長老',
+  infobox:{'性別':'女','種族':'<a class="wl" href="#race-kitsune">狐女/九尾狐</a>','身分':'<a class="wl" href="#nation-dreamsilk">夢絲城</a>千帳狐・首席長老'},
+  body:`
+  <p>芙月是夢絲城師徒制長老院現任首席,掌握全大陸最龐大的情報網絡之一,各域外交使節都樂於與她打探消息。</p>
+  <h2>個性</h2>
+  <p>永遠比對話對象多想三步,說話滴水不漏卻讓人如沐春風——她的原則是「情報可以交換,但立場永不外洩」。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#夢絲城</span><span class="tag">#狐女</span>
+  </div>
+  `
+},
+'char-silan':{
+  title:'塞倫', category:'角色誌', domain:'bloom', tags:['角色','根都','大長老'],
+  alt:'Silan · 根都大長老',
+  infobox:{'性別':'男','年齡':'約600歲(艾瑟瑞亞已知最年長的在世角色之一)','種族':'<a class="wl" href="#race-dryads">樹精</a>','身分':'<a class="wl" href="#nation-rootreach">根都</a>大長老'},
+  body:`
+  <p>塞倫是根都長老院現任領袖,職責不僅是宗教事務,也包含仲裁跨域爭端。<a class="wl" href="#char-vero">薇珞</a>是他
+  座下資深護根者之一。</p>
+  <h2>個性</h2>
+  <p>極度耐心、鮮少動怒,累積數百年的視角讓他傾向「先觀察十年再下判斷」,但一旦做出裁決便極少改變——這種近乎不動如山的
+  穩定感,正是根都作為全大陸中立仲裁者的基石。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#根都</span><span class="tag">#薇珞</span>
+  </div>
+  `
+},
+'char-eleanor':{
+  title:'艾莉諾・拓境', category:'角色誌', domain:null, tags:['角色','人族','拓境行會聯合會長'],
+  alt:'Eleanor · 拓境行會聯合現任會長',
+  infobox:{'性別':'女','年齡':'52歲','種族':'<a class="wl" href="#race-human">人族</a>','身分':'<a class="wl" href="#pathfinders-hold">拓境行會聯合</a>現任會長'},
+  body:`
+  <p>艾莉諾是現任拓境行會聯合會長,統籌商隊、工匠、嚮導三大子公會的對外事務,是人族在跨域政治場合的主要發聲者。</p>
+  <h2>個性</h2>
+  <p>務實精明,對人族得來不易的跨域承認格外珍惜,行事風格謹慎保守——寧可少接一筆生意,也不願讓拓境城的信譽出任何差錯。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#拓境城</span><span class="tag">#人族</span>
+  </div>
+  `
+},
+
+/* ---------------- 角色誌:感情線角色 ---------------- */
+'char-glenn':{
+  title:'格倫・諾維', category:'角色誌', domain:null, tags:['角色','人族','拓境行會護衛隊長'],
+  alt:'Glenn Norwood · 拓境行會護衛隊長',
+  infobox:{'性別':'男','年齡':'32歲','種族':'<a class="wl" href="#race-human">人族</a>','身分':'<a class="wl" href="#pathfinders-hold">拓境行會</a>護衛隊長','感情對象':'<a class="wl" href="#char-feyla">妃嵐女王</a>'},
+  body:`
+  <p>格倫奉派保護跨域同盟隊伍,是<a class="wl" href="#char-feyla">妃嵐女王</a>感情線的對象,詳見
+  <a class="wl" href="#char-relationships">人際關係與感情線</a>。</p>
+  <h2>個性</h2>
+  <p>沉穩可靠,不擅辭令但行動力十足,對妃嵐的感情從未主動表露,深知這段感情牽動的政治重量遠超過兩人本身。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#妃嵐</span><span class="tag">#人際關係與感情線</span>
+  </div>
+  `
+},
+'char-daria':{
+  title:'妲莉亞・渥登', category:'角色誌', domain:'abyss', tags:['角色','黑淵母邦','黑暗精靈'],
+  alt:'Daria Voldrenn · 黑淵母邦士兵',
+  infobox:{'性別':'女','年齡':'29歲','種族':'<a class="wl" href="#race-drow">黑暗精靈</a>','身分':'<a class="wl" href="#nation-umbral">黑淵母邦</a>士兵','親屬':'<a class="wl" href="#char-syra">賽拉</a>之堂妹','感情對象':'<a class="wl" href="#char-lyien">柳因</a>'},
+  body:`
+  <p>妲莉亞是<a class="wl" href="#char-syra">賽拉</a>的堂妹,厭倦黑淵母邦內部因真理教派系鬥爭而永無止盡的猜忌與算計。
+  於<a class="wl" href="#battle-rootreach">根都之危</a>一役與<a class="wl" href="#char-lyien">柳因</a>並肩作戰而相識,
+  詳見<a class="wl" href="#char-relationships">人際關係與感情線</a>。</p>
+  <h2>個性</h2>
+  <p>坦率、對體制內的虛偽毫不掩飾厭惡,是堂姐賽拉理想主義的另一種表現形式——賽拉選擇留在體制內改革,妲莉亞則想直接離開。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#賽拉</span><span class="tag">#柳因</span><span class="tag">#人際關係與感情線</span>
+  </div>
+  `
+},
+'char-lyien':{
+  title:'柳因', category:'角色誌', domain:'bloom', tags:['角色','根都','樹精護根者學徒'],
+  alt:'Lyien · 根都護根者學徒',
+  infobox:{'性別':'男','年齡':'表觀25歲(樹精,仍屬幼樹階段)','種族':'<a class="wl" href="#race-dryads">樹精</a>','身分':'<a class="wl" href="#nation-rootreach">根都</a>護根者學徒','感情對象':'<a class="wl" href="#char-daria">妲莉亞</a>'},
+  body:`
+  <p>柳因是根都護根者學徒,對根都表面中立、實則對某些真相刻意隱瞞感到失望。於<a class="wl" href="#battle-rootreach">根都之危</a>
+  一役與<a class="wl" href="#char-daria">妲莉亞</a>並肩作戰而相識,詳見<a class="wl" href="#char-relationships">人際關係與感情線</a>。</p>
+  <h2>個性</h2>
+  <p>理想主義、對體制的虛偽感到失望卻仍選擇留下,期望從內部改變——與妲莉亞「想直接離開」形成有趣對照。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#根都</span><span class="tag">#妲莉亞</span><span class="tag">#人際關係與感情線</span>
+  </div>
+  `
+},
+
+/* ---------------- 五大生態域 ---------------- */
+'domain-ember':{
+  title:'炙炎山脈', category:'五大生態域', domain:'ember', tags:['生態域','火','龍女','炎狐'],
+  alt:'Ember Peaks',
+  infobox:{'類型':'火山生態域','代表生物':'熔岩角獸、焰翼蜂鳥、灰燼鳳蝶','主要種族':'<a class="wl" href="#race-dragonkin">龍女</a>、<a class="wl" href="#race-emberfox">炎狐</a>、熔岩魅魔','建築風格':'熔鑄建築 (Emberforge)','貿易品':'火屬性晶石、熔岩金屬、焰翼蜂蜜'},
+  body:`
+  <p>炙炎山脈是艾瑟瑞亞五大生態域之一,終年被永恆的橙紅天空籠罩,遍布火山與熔岩河。作為<a class="wl" href="#race-dragonkin">龍女</a>與炎狐一族的家園,
+  這裡的一切文化都圍繞著「力量」與「熱情」展開。</p>
+
+  <h2>環境</h2>
+  <p>地貌以活火山、熔岩河為主,天空終年呈現橙紅色澤。此地是<a class="wl" href="#magic-system">魔力循環</a>五種原始魔力中「火」屬性的來源地。</p>
+
+  <h2>代表生物</h2>
+  <ul>
+    <li><b>熔岩角獸</b> —— 食物鏈頂級掠食者之前的大型生物</li>
+    <li><b>焰翼蜂鳥</b> —— 食物鏈基礎物種</li>
+    <li><b>灰燼鳳蝶</b> —— 中階物種</li>
+  </ul>
+  <p>完整食物鏈:基礎 → 焰翼蜂鳥 → 灰燼鳳蝶 → 熔岩角獸 → <a class="wl" href="#race-dragonkin">龍女</a>/炎狐(頂級)</p>
+
+  <h2>建築:熔鑄建築 (Emberforge Architecture)</h2>
+  <p>建築多半半嵌入火山岩壁,以「熔岩澆鑄法」建造——將熔岩導入預製模具,冷卻後形成天然強化的黑曜石牆體。屋頂普遍採用向上聚攏的尖錐造型,
+  象徵「向天穹致敬」,同時利於排出硫煙。城市核心常圍繞一座「活火山井」而建,終年提供地熱與照明。</p>
+  <p>代表建物包括<b>熔焰議事廳</b>(龍女母系氏族的權力中心,單一巨型黑曜石雕鑿而成)與<b>焰蜂塔</b>(炎狐族的蜂蜜貿易站)。
+  色彩以黑曜石、赤銅、熔鑄玻璃為主,深黑搭配橙紅光紋。</p>
+
+  <h2>季節性遷徙:火之誓約</h2>
+  <p>夏季時,<a class="wl" href="#race-dragonkin">龍女</a>與炎狐會以炙炎山脈為中心向外遷徙,與其他種族進行「火之交融」儀式,詳見
+  <a class="wl" href="#migration">跨域遷徙路線</a>。</p>
+
+  <h2>政治版圖</h2>
+  <table class="wiki-table">
+    <tr><th>政體</th><th>統治形式</th><th>首都/中心</th><th>備註</th></tr>
+    <tr><td><a class="wl" href="#nation-pyraxis"><b>熔焰王國</b></a><br>Pyraxis Dominion</td><td>爐火議會制,推舉「熔焰女王」統領</td><td>赤鑄都(Emberholt),建於<a class="wl" href="#race-dragonkin">龍女</a>之熔焰議事廳周邊</td><td><a class="wl" href="#race-dragonkin">龍女</a>母系氏族核心政體</td></tr>
+    <tr><td><a class="wl" href="#nation-kindling"><b>焰狐盟</b></a><br>Kindling Accord</td><td>無中央君主,輪值代表制</td><td>蜂鳴鎮(Emberhive),圍繞焰蜂塔而建</td><td>炎狐部落聯盟</td></tr>
+    <tr><td><a class="wl" href="#minor-factions"><b>熔岩魅魔飛地</b></a></td><td>貴族外派</td><td>灼焰廳</td><td>與<a class="wl" href="#domain-abyss">永夜深淵</a>的外交橋樑</td></tr>
+  </table>
+  <p><b>地標</b>:裂焰山脊(Rift Ridge)——大陸最活躍的火山鏈;永燃谷(Everember Vale)——終年燃燒不熄的地熱谷地,是「火之誓約」的聖地。</p>
+  <p><b>對外關係</b>:熔焰王國與焰狐盟世代結盟,「火之誓約」即雙方最初和平協議的儀式化延續;與<a class="wl" href="#domain-lunar">月影古林</a>
+  的月伏部落聯盟則因「火月之路」貿易線維持謹慎的商業夥伴關係,偶因牧場與晶礦採集權爆發邊境摩擦。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#龍女</span><span class="tag">#炎狐</span><span class="tag">#火之誓約</span><span class="tag">#火月之路</span><span class="tag">#熔焰王國</span>
+  </div>
+  `
+},
+'domain-lunar':{
+  title:'月影古林', category:'五大生態域', domain:'lunar', tags:['生態域','月','狼女','狐女'],
+  alt:'Lunar Shadow Woods',
+  infobox:{'類型':'古木森林生態域','代表生物':'月影鹿、夢織蛛、銀月狼靈','主要種族':'<a class="wl" href="#race-lunarfang">狼女</a>、<a class="wl" href="#race-bloodfangfox">血狐</a>、<a class="wl" href="#race-moonsprite">月光精靈</a>','建築風格':'織影建築 (Shadowweave)','貿易品':'月光絲、夢織蛛絲、月影鹿角'},
+  body:`
+  <p>月影古林是一片巨大的古木森林,樹木隨月相變化色澤,是<a class="wl" href="#race-lunarfang">狼女</a>與月光精靈的家園,
+  月光屬性魔力自此域流向世界樹根系。</p>
+
+  <h2>環境</h2>
+  <p>巨大古木森林,林相隨月相改變顏色——滿月時銀白,新月時轉為深藍。</p>
+
+  <h2>代表生物與食物鏈</h2>
+  <p>月光植物 → 月影鹿 → 夢織蛛 → <a class="wl" href="#race-lunarfang">狼女</a>/血狐(頂級)。此外亦棲息著銀月狼靈這類半靈體生物。</p>
+
+  <h2>建築:織影建築 (Shadowweave Architecture)</h2>
+  <p>幾乎不使用石材,以「活木塑形術」引導巨樹自然生長成居所——牆壁即是樹皮,窗戶是自然形成的樹瘤孔洞。建築高度分層,
+  依樹冠層次劃分社會地位:地面層為公共議會空間,中層為工坊,樹冠層為貴族與長老居所。</p>
+  <p>代表建物為<b>月下議會樹</b>(狼女部落核心,樹幹中空形成天然圓形議事廳)與<b>夢織塔</b>(狐女與夢織蛛共生建造)。</p>
+
+  <h2>季節性遷徙:月之狂獵</h2>
+  <p>秋季時,<a class="wl" href="#race-lunarfang">狼女</a>、血狐、月光精靈會大規模遷徙,尋找跨域伴侶,詳見<a class="wl" href="#migration">跨域遷徙路線</a>。
+  歷史上曾在紀元2450爆發「<a class="wl" href="#history">月之狂亂</a>」,魔力潮汐失控導致長達三年的狂熱期。</p>
+
+  <h2>政治版圖</h2>
+  <table class="wiki-table">
+    <tr><th>政體</th><th>統治形式</th><th>首都/中心</th><th>備註</th></tr>
+    <tr><td><a class="wl" href="#nation-lunarfang"><b>月伏部落聯盟</b></a><br>Lunar Fang Confederacy</td><td>部落制,「月牙首領」輪流主持月下議會</td><td>月下議會樹(無固定首都)</td><td><a class="wl" href="#race-lunarfang">狼女</a>核心政體</td></tr>
+    <tr><td><a class="wl" href="#nation-dreamsilk"><b>幻林城邦・夢絲城</b></a><br>Dreamsilk City</td><td>師徒制長老院</td><td>夢絲城,以夢織塔建築群為核心</td><td><a class="wl" href="#race-kitsune">狐女/九尾狐</a>建立,以貿易與情報仲介聞名</td></tr>
+    <tr><td><a class="wl" href="#minor-factions"><b>荒血部</b></a><br>Bloodfang Wilds</td><td>游牧氏族,無固定領地</td><td>——</td><td>血狐,與月伏部落聯盟關係緊張</td></tr>
+    <tr><td><a class="wl" href="#minor-factions"><b>銀月庇護地</b></a><br>Silvermoon Sanctuary</td><td>隱世聚落</td><td>林冠最古老樹層</td><td>月光精靈,幾乎不參與外交</td></tr>
+  </table>
+  <p><b>地標</b>:銀鬃嶺(Silvermane Ridge)——狼女主要狩獵地;夜嚎谷(Howlwake Hollow)——「月之羈絆」儀式聖地。</p>
+  <p><b>對外關係</b>:月伏部落聯盟與夢絲城維持互利貿易同盟(皮草、月影鹿角換取幻夢染工藝品與情報);與荒血部則長期處於低烈度邊境衝突。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#狼女</span><span class="tag">#狐女</span><span class="tag">#月之羈絆</span><span class="tag">#火月之路</span><span class="tag">#月伏部落聯盟</span>
+  </div>
+  `
+},
+'domain-abyss':{
+  title:'永夜深淵', category:'五大生態域', domain:'abyss', tags:['生態域','暗影','魅魔','黑暗精靈'],
+  alt:'Abyssal Depths',
+  infobox:{'類型':'地底洞穴生態域','代表生物':'晶噬蠕蟲、影縛幽魂、深淵歌者','主要種族':'<a class="wl" href="#race-drow">黑暗精靈</a>、<a class="wl" href="#race-lilith">魅魔</a>、<a class="wl" href="#race-shadowkin">影魅</a>','建築風格':'晶脈建築 (Crystalvein)','貿易品':'暗影水晶、魅魔之吻精華'},
+  body:`
+  <p>永夜深淵是一套地下巨大洞穴系統,終年不見天日,僅靠遍布的晶石發出幽光照明。這裡是<a class="wl" href="#race-drow">黑暗精靈</a>與
+  <a class="wl" href="#race-lilith">魅魔</a>建立階級秩序的領地,暗影屬性魔力的來源地。</p>
+
+  <h2>環境</h2>
+  <p>地下巨大洞穴系統,晶石發光取代日月照明。</p>
+
+  <h2>建築:晶脈建築 (Crystalvein Architecture)</h2>
+  <p>建於天然洞穴系統中,大量使用「晶石共鳴技術」——建築本身由發光晶礦構成,依附著者魔力自動調節亮度與溫度。空間設計強調「垂直階級」:
+  女王宮殿位於洞穴最深最高處,學徒居所則散布於外圍較淺層。走廊常設計為狹窄迂迴,體現黑暗精靈重視隱密與試探的文化。</p>
+  <p>代表建物為<b>深淵之心</b>(<a class="wl" href="#race-lilith">魅魔</a>女王居所,單一巨型紫水晶雕成)與<b>契約廳</b>
+  (<a class="wl" href="#race-drow">黑暗精靈</a>簽訂正式契約的場所)。</p>
+
+  <h2>歷史事件</h2>
+  <p>紀元3120,「<a class="wl" href="#history">莉莉絲降臨</a>」——魅魔始祖出現,於此地建立永夜深淵的階級秩序。</p>
+
+  <h2>政治版圖</h2>
+  <table class="wiki-table">
+    <tr><th>政體</th><th>統治形式</th><th>首都/中心</th><th>備註</th></tr>
+    <tr><td><a class="wl" href="#nation-covenant"><b>契約王朝</b></a><br>Covenant Dynasty</td><td>世襲女王制,貴族依契約數量定爵位</td><td>契約都(Covenant Spire),環繞深淵之心</td><td><a class="wl" href="#race-lilith">魅魔</a>核心政體</td></tr>
+    <tr><td><a class="wl" href="#nation-umbral"><b>黑淵母邦</b></a><br>Umbral Matriarchy</td><td>母系階級制,「暗后」統治</td><td>陰廷(Umbratheron)</td><td><a class="wl" href="#race-drow">黑暗精靈</a>核心政體</td></tr>
+    <tr><td><a class="wl" href="#minor-factions"><b>影裔殘部</b></a><br>Remnant of the Shade</td><td>分散地下反抗網絡,不被承認</td><td>未圖之境(位置不明)</td><td>紀元5890「<a class="wl" href="#history">影之叛亂</a>」倖存者</td></tr>
+  </table>
+  <p><b>地標</b>:回聲深坑(Echoing Pit)——傳說通往更深未知領域的天然豎井,被兩大政體共同列為禁地。</p>
+  <p><b>對外關係</b>:契約王朝與黑淵母邦名義上共享永夜深淵統治權,實則長期暗中角力,爭奪回聲深坑等戰略地標控制權;
+  但對「影裔殘部」則採一致鎮壓立場。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#黑暗精靈</span><span class="tag">#魅魔</span><span class="tag">#莉莉絲之影</span><span class="tag">#夢淵之路</span><span class="tag">#影裔殘部</span>
+  </div>
+  `
+},
+'domain-bloom':{
+  title:'晶夢花海', category:'五大生態域', domain:'bloom', tags:['生態域','夢境','花精','樹精'],
+  alt:'Crystal Dream Meadows',
+  infobox:{'類型':'漂浮花島生態域','代表生物':'幻光蝶群、根脈古樹守護者、夢露花精','主要種族':'<a class="wl" href="#race-bloomsprites">花精</a>、<a class="wl" href="#race-dryads">樹精</a>、星塵龍女、<a class="wl" href="#race-dreamdemon">夢魔</a>','建築風格':'綻放建築 (Bloomspire)','貿易品':'夢境花粉、幻光蝶翼粉'},
+  body:`
+  <p>晶夢花海由無數漂浮島嶼與巨大夢幻花海組成,是<a class="wl" href="#race-bloomsprites">花精</a>、
+  <a class="wl" href="#race-dryads">樹精</a>與星塵龍女共同棲居之地,夢境屬性魔力自此匯入世界樹。</p>
+
+  <h2>建築:綻放建築 (Bloomspire Architecture)</h2>
+  <p>建築本身「有生命」——由樹精引導巨花與藤蔓共同生長而成,牆面會隨季節開花凋謝。浮空島嶼之間以「花藤橋」連接,橋身由柔韌花莖編織,
+  踩踏時會微微發光。無明確「牆」的概念,多以花瓣簾幕、藤蔓屏風劃分空間。</p>
+  <p>代表建物為<b>花瓣議會殿</b>(花精季節輪替領導制度的議事場所,每季更換花色外觀)與<b>夢露花塔</b>(星塵龍女的占星場所)。</p>
+
+  <h2>季節性遷徙:覺醒之途</h2>
+  <p>春季時,<a class="wl" href="#race-bloomsprites">花精</a>、星塵龍女、夢魔會攜帶夢境花粉向全大陸擴散,詳見
+  <a class="wl" href="#migration">跨域遷徙路線</a>。</p>
+
+  <h2>政治版圖</h2>
+  <table class="wiki-table">
+    <tr><th>政體</th><th>統治形式</th><th>首都/中心</th><th>備註</th></tr>
+    <tr><td><a class="wl" href="#nation-petalconcord"><b>花瓣聯盟</b></a><br>Petal Concord</td><td>季節輪替議會制,無固定領導者</td><td>花瓣議會殿(隨季節變換外觀)</td><td><a class="wl" href="#race-bloomsprites">花精</a>核心政體</td></tr>
+    <tr><td><a class="wl" href="#nation-rootreach"><b>根都</b></a><br>Rootreach</td><td>樹精長老院管理</td><td>環繞世界樹根基而建</td><td><a class="wl" href="#race-dryads">樹精</a>核心政體,全大陸公認中立聖地</td></tr>
+    <tr><td><a class="wl" href="#nation-starisles"><b>十二星島盟</b></a><br>Twelve Star Isles</td><td>鬆散聯盟,依占卜結果決策</td><td>十二座依星座命名的漂浮小島</td><td><a class="wl" href="#race-stardust">星塵龍女</a>,保持中立超然</td></tr>
+    <tr><td><a class="wl" href="#minor-factions"><b>夢境邊境守望者</b></a><br>Dreamveil Wardens</td><td>隱密巡守組織</td><td>夢淵之路沿線</td><td>夢魔組成,防止惡夢污染滲透</td></tr>
+  </table>
+  <p><b>對外關係</b>:花瓣聯盟與根都同域而治,共同守護世界樹周邊事務;十二星島盟則鮮少涉入域內政治。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#花精</span><span class="tag">#樹精</span><span class="tag">#夢境織女</span><span class="tag">#夢淵之路</span><span class="tag">#根都</span>
+  </div>
+  `
+},
+'domain-trench':{
+  title:'深海裂隙', category:'五大生態域', domain:'trench', tags:['生態域','水','海妖'],
+  alt:'Abyssal Trenches',
+  infobox:{'類型':'深海生態域','代表生物':'光歌鯨、晶棘海龍、深淵燈籠魚','主要種族':'<a class="wl" href="#race-sirens">海妖</a>、<a class="wl" href="#race-watersprite">水精靈</a>、<a class="wl" href="#race-crystalwing">晶翼蝶女</a>','建築風格':'珊瑚建築 (Coralshrine)','貿易品':'深海珍珠、光歌鯨的歌聲水晶'},
+  body:`
+  <p>深海裂隙是高壓深海裂谷,遍布發光珊瑚宮殿,是<a class="wl" href="#race-sirens">海妖</a>一族的疆域,水屬性魔力的來源地。</p>
+
+  <h2>建築:珊瑚建築 (Coralshrine Architecture)</h2>
+  <p>完全建於水下,以「珊瑚培育術」引導珊瑚礁自然生長成宮殿結構,兼具堅固與美觀。建築內部充滿發光水母與螢光藻類作為照明,
+  走廊設計呈流線型以配合水流。<a class="wl" href="#race-sirens">海妖</a>聚落常見「歌唱廳」,利用天然洞穴的回音效果放大歌聲。</p>
+  <p>代表建物為<b>光歌鯨神殿</b>(供奉光歌鯨的聖地)與<b>深淵燈籠宮</b>(水精靈與晶翼蝶女共同居所)。</p>
+
+  <h2>傳奇生物</h2>
+  <p><a class="wl" href="#creature-abysssovereign">永眠海皇</a>是深海裂隙的守護者,能操控海流與記憶。</p>
+
+  <h2>政治版圖</h2>
+  <table class="wiki-table">
+    <tr><th>政體</th><th>統治形式</th><th>首都/中心</th><th>備註</th></tr>
+    <tr><td><a class="wl" href="#nation-choral"><b>歌詠議會</b></a><br>Choral Assembly</td><td>集體合唱決策制,無單一領袖</td><td>回音礁(Echoreef),環繞光歌鯨神殿</td><td><a class="wl" href="#race-sirens">海妖</a>核心政體</td></tr>
+    <tr><td><a class="wl" href="#nation-tidewatch"><b>潮汐議會</b></a><br>Tidewatch Council</td><td>獨立行政議會</td><td>回音礁(與歌詠議會共享)</td><td>水精靈核心政體</td></tr>
+    <tr><td><a class="wl" href="#minor-factions"><b>燈籠淺礁站</b></a><br>Lanternshoal Outpost</td><td>前哨貿易站</td><td>深海與淺海交界</td><td>晶翼蝶女建立,對外貿易窗口</td></tr>
+  </table>
+  <p><b>對外關係</b>:歌詠議會與潮汐議會權力共享,鮮少衝突;燈籠淺礁站是深海裂隙與外界往來的實質窗口。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#海妖</span><span class="tag">#永眠海皇</span><span class="tag">#歌詠議會</span>
+  </div>
+  `
+},
+
+/* ---------------- 神器與遺物 ---------------- */
+'legendary-artifacts':{
+  title:'知名神器與傳說物品', category:'神器與遺物', domain:null, tags:['神器','遺物','聖物'],
+  alt:'Legendary Artifacts of Aetheria',
+  infobox:{'已知神器數':'8件見於正史','最神聖':'世界樹之淚','最具威脅性':'闇蝕之心(下落成謎)'},
+  body:`
+  <p>艾瑟瑞亞的歷史大事往往與特定神器緊密纏繞——它們或見證和平的締結,或曾是叛亂的凶器,至今仍深刻影響著各政體的權力與信仰。</p>
+
+  <table class="wiki-table">
+    <tr><th>神器</th><th>起源事件</th><th>現況</th></tr>
+    <tr><td>五域晶約</td><td>大交融協定(紀元3780)</td><td>完好,由護根者守護於根都</td></tr>
+    <tr><td>破天槍</td><td>天穹之戰(紀元1200)</td><td>熔焰王朝王室聖物,現由妃嵐女王持有</td></tr>
+    <tr><td>始祖契約書</td><td>莉莉絲降臨(紀元3120)</td><td>供奉於契約廳,用於國家級儀典</td></tr>
+    <tr><td>闇蝕之心</td><td>影之叛亂(紀元5890)</td><td>下落成謎,傳說封印於未圖之境</td></tr>
+    <tr><td>世界樹之淚</td><td>世界樹年度落淚</td><td>由護根者管制採集,嚴禁私下交易</td></tr>
+    <tr><td>拓境羅盤</td><td>人族抵達初期(紀元850後)</td><td>原件典藏於拓境城,量產複製品廣泛流通</td></tr>
+    <tr><td>星塵占卜盤</td><td>星塵龍女先祖傳說</td><td>典藏於夢露花塔</td></tr>
+    <tr><td>光歌鯨骨笛</td><td>古代光歌鯨自我犧牲</td><td>典藏於光歌鯨神殿,僅大合唱長可吹奏</td></tr>
+  </table>
+
+  <h2>五域晶約 (The Concord Crystal)</h2>
+  <p>為紀元3780「<a class="wl" href="#history">大交融協定</a>」簽署而鍛造的五面水晶,每一面分別與一域的魔力產生共鳴。
+  只要晶約完整,協定便持續生效——傳說若任一面破裂,該域便自動解除協定義務。現供奉於<a class="wl" href="#unclaimed-territories">根都</a>,
+  由<a class="wl" href="#pantheon-faith">護根者</a>日夜看守。</p>
+
+  <h2>破天槍 (Skybreaker Lance)</h2>
+  <p>由<a class="wl" href="#royal-lineages">熔焰王朝</a>初代女王伊格妮絲一世於紀元1200<a class="wl" href="#history">天穹之戰</a>中所持,
+  據傳以墜落的星辰殘鐵鍛造而成,能短暫賦予持有者飛行之力,並可貫穿一般魔法結界。如今作為王室聖物代代相傳,由現任女王
+  <a class="wl" href="#royal-lineages">妃嵐</a>持有,多用於加冕等重大儀式,鮮少真正用於實戰。</p>
+
+  <h2>始祖契約書 (The First Covenant)</h2>
+  <p><a class="wl" href="#creature-lilithshadow">莉莉絲之影</a>於紀元3120建立契約王朝時所立的原始文書,是一張會自我更新的「活體羊皮紙」,
+  據說上面仍隱隱透著始祖親筆字跡的微光。任何在此書上締結的契約都會獲得魔法強制力,是<a class="wl" href="#race-lilith">魅魔</a>
+  「情慾契約」制度得以運作的根本依據,現供奉於永夜深淵的契約廳。</p>
+
+  <h2>闇蝕之心 (Heart of Umbral Corrosion)</h2>
+  <p>紀元5890「<a class="wl" href="#history">影之叛亂</a>」期間,影魅首領用以奪取世界樹控制權的核心凶器——一顆會「反向吞噬」
+  純淨以太魔力、將其逆轉為濁魔力的黑色晶核。叛亂被鎮壓後,此物並未被摧毀,而是被刻意封存,下落成謎;民間傳說指向
+  <a class="wl" href="#unclaimed-territories">未圖之境</a>,若真相屬實,它很可能就是<a class="wl" href="#pantheon-faith">當代預言</a>
+  中「沉睡之影」所指的存在。</p>
+
+  <h2>世界樹之淚 (Worldroot's Tears)</h2>
+  <p><a class="wl" href="#creature-titan">世界樹</a>每年「流淚」所產生的金色魔力樹液,凝結後形成半透明琥珀寶石,具有極強的療癒與回春效果,
+  也用於加冕、締約等高等儀式。因產量稀少,私自交易屬重罪,僅由護根者統一管制採集與分配。</p>
+
+  <h2>拓境羅盤 (Pathfinder's Compass)</h2>
+  <p>由<a class="wl" href="#notable-figures">凱恩·灰旅</a>在人族抵達初期,憑藉對雲海洋流的觀察所打造的機械式羅盤——完全不依賴魔力運作,
+  純粹以精密工藝偵測安全的雲海航道。原件典藏於拓境城,而其量產複製品早已成為<a class="wl" href="#transit-network">雲舟商隊</a>的標準配備,
+  也解釋了<a class="wl" href="#race-human">人族</a>何以能在毫無元素親和力的情況下,仍壟斷大陸交通網絡的營運。</p>
+
+  <h2>星塵占卜盤 (The Stardust Oracle Disc)</h2>
+  <p>傳說隨<a class="wl" href="#race-stardust">星塵龍女</a>先祖一同墜落天穹的古老水晶圓盤,能即時映照星象變化,是「星辰交融」儀式中不可或缺的占卜工具,
+  典藏於夢露花塔。</p>
+
+  <h2>光歌鯨骨笛 (The Whalesong Flute)</h2>
+  <p>以數百年前一頭自願擱淺的古老光歌鯨骨骼雕成的笛器,能安撫甚至召喚深海生物,於「海之合唱」儀式中使用,
+  現供奉於光歌鯨神殿,僅由<a class="wl" href="#notable-figures">大合唱長珂拉莉</a>有資格吹奏。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#大交融協定</span><span class="tag">#天穹之戰</span><span class="tag">#影之叛亂</span><span class="tag">#當代預言</span>
+  </div>
+  `
+},
+
+/* ---------------- 重大歷史事件 ---------------- */
+'event-sky-war':{
+  title:'天穹之戰', category:'重大歷史事件', domain:'ember', tags:['歷史事件','天穹之戰','紀元1200'],
+  alt:'紀元1200 · The War of the High Sky',
+  infobox:{'時間':'紀元1200','交戰方':'龍女氏族 vs 天使族','關鍵人物':'伊格妮絲一世','結果':'龍女慘勝,熔焰王朝建立'},
+  body:`
+  <p>天穹之戰是艾瑟瑞亞歷史上第一場、也是規模最大的一場「跨界」戰爭,交戰對象並非大陸原生種族,而是棲居於雲海之上更高處、
+  此前對大陸事務近乎漠不關心的「天使族」。</p>
+
+  <h2>背景</h2>
+  <p>紀元850「第一次魔力崩壞」後,世界樹陷入長達三百餘年的沉睡,大陸<a class="wl" href="#magic-system">魔力循環</a>因此紊亂,
+  未經淨化的濁魔力持續外洩、瀰漫至雲海更高層。天使族察覺這股「污染」擴散,將其解讀為大陸情慾魔力氾濫失控的徵兆,
+  決意介入清除,遂揮軍南下。</p>
+
+  <h2>戰役經過</h2>
+  <p><a class="wl" href="#race-dragonkin">龍女</a>氏族首當其衝,面對天使族優勢的光輝魔法節節敗退,傷亡慘重。危急時刻,
+  年輕的氏族戰士伊格妮絲挺身而出,率領殘部另闢蹊徑,以自創的近身纏鬥戰術突破天使族倚賴的遠程光輝結界,
+  最終擊潰天使先鋒部隊,迫使天使族撤回雲海之上,此後極少再現身介入大陸事務。</p>
+
+  <h2>餘波</h2>
+  <p>戰爭中雙方交戰時灑落的龍血滲入大陸各處,被認為是<a class="wl" href="#race-stardust">星塵龍女</a>等混血支系誕生的起源。
+  傳說<a class="wl" href="#creature-starfall">星滅龍王</a>亦於此戰現身守護天穹,自此被龍女奉為信仰對象(詳見<a class="wl" href="#pantheon-faith">信仰體系</a>)。
+  伊格妮絲因戰功被推舉為初代熔焰女王,統一原本各自為政的龍女氏族,建立<a class="wl" href="#nation-pyraxis">熔焰王國</a>,
+  其所持之矛後世稱為<a class="wl" href="#legendary-artifacts">破天槍</a>,成為王室世代相傳的聖物。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#熔焰王國</span><span class="tag">#破天槍</span><span class="tag">#星滅龍王</span><span class="tag">#王室譜系</span>
+  </div>
+  `
+},
+'event-lilith-advent':{
+  title:'莉莉絲降臨', category:'重大歷史事件', domain:'abyss', tags:['歷史事件','莉莉絲降臨','紀元3120'],
+  alt:'紀元3120 · The Advent of Lilith',
+  infobox:{'時間':'紀元3120','地點':'永夜深淵','關鍵人物':'莉莉絲之影','結果':'契約王朝建立'},
+  body:`
+  <p>莉莉絲降臨是永夜深淵政治秩序的起點,標誌著這片黑暗洞窟系統從長期無序狀態,轉變為艾瑟瑞亞最具組織性的政體之一。</p>
+
+  <h2>背景</h2>
+  <p>紀元850第一次魔力崩壞後,<a class="wl" href="#domain-abyss">永夜深淵</a>陷入長期混亂,黑暗精靈部族分裂交戰,
+  魅魔的原始形態(彼時尚無正式族名,僅被稱為「夜語者」)則四散於各洞穴中,沒有任何統一組織。</p>
+
+  <h2>降臨與建制</h2>
+  <p>一名自稱源於太虛本身的存在——莉莉絲——現身於深淵最幽暗處,以無可抗拒的魅力與智慧,在極短時間內收攏夜語者的效忠,
+  建立起「情慾契約」制度,將原本混亂的魅力運用規則化、制度化。她自任首任女王「莉莉絲一世」,建立<a class="wl" href="#nation-covenant">契約王朝</a>。</p>
+
+  <h2>影響</h2>
+  <p>契約王朝的出現為永夜深淵首次帶來穩定秩序,但也間接促成黑暗精靈部族出於制衡心理,於紀元1450正式整合為
+  <a class="wl" href="#nation-umbral">黑淵母邦</a>,形成延續至今的雙政體並立局面。莉莉絲本人在建立王朝後逐漸退隱,
+  不再親自處理政務,但「莉莉絲」稱號自此成為歷代女王世襲攝政稱號傳統的起點,她的存在也被<a class="wl" href="#pantheon-faith">莉莉絲教團</a>
+  奉為神格,始祖契約書則被列為<a class="wl" href="#legendary-artifacts">神器</a>供奉至今。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#契約王朝</span><span class="tag">#莉莉絲之影</span><span class="tag">#始祖契約書</span><span class="tag">#王室譜系</span>
+  </div>
+  `
+},
+'event-grand-concord':{
+  title:'大交融協定', category:'重大歷史事件', domain:null, tags:['歷史事件','大交融協定','紀元3780'],
+  alt:'紀元3780 · The Grand Concord',
+  infobox:{'時間':'紀元3780','地點':'世界樹下(今根都)','簽署方':'五域代表','結果':'跨域貿易時代開啟,根都中立地位確立'},
+  body:`
+  <p>大交融協定是艾瑟瑞亞五域關係史上最關鍵的轉捩點,結束了長期猜忌與零星衝突,開啟延續至今的跨域貿易與外交穩定期。</p>
+
+  <h2>背景</h2>
+  <p>天穹之戰與莉莉絲降臨後,五域雖各自穩定內政,但域間猜忌未解——尤其新興的<a class="wl" href="#nation-covenant">契約王朝</a>
+  與其他域幾乎沒有正式貿易往來,<a class="wl" href="#domain-ember">炙炎山脈</a>與<a class="wl" href="#domain-lunar">月影古林</a>
+  之間也因牧場與晶礦採集權時常爆發邊境摩擦。</p>
+
+  <h2>協定簽署</h2>
+  <p>在<a class="wl" href="#race-dryads">樹精</a>長老院的斡旋下,五域代表首次齊聚世界樹下,經過數月談判,簽署了具魔法強制力的
+  和平協定,詳見<a class="wl" href="#notable-figures">五域代表名單</a>,並鍛造<a class="wl" href="#legendary-artifacts">五域晶約</a>
+  作為協定的實體見證。</p>
+
+  <h2>影響</h2>
+  <p>協定開啟長達數百年的跨域貿易穩定期,<a class="wl" href="#transit-network">火月之路、夢淵之路</a>等主要商路自此正式確立並受到協定保障。
+  這也是<a class="wl" href="#nation-rootreach">根都</a>被公認為五域共同承認之中立聖地地位確立的關鍵時刻——五域晶約至今仍供奉於此,
+  象徵協定持續有效。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#五域晶約</span><span class="tag">#根都</span><span class="tag">#經濟與貿易</span><span class="tag">#歷史英雄錄</span>
+  </div>
+  `
+},
+'event-shadow-rebellion':{
+  title:'影之叛亂', category:'重大歷史事件', domain:'abyss', tags:['歷史事件','影之叛亂','紀元5890'],
+  alt:'紀元5890 · The Shadow Rebellion',
+  infobox:{'時間':'紀元5890','地點':'根都外圍','鎮壓者':'三大君主聯軍','結果':'叛亂被鎮壓,闇蝕之心失蹤'},
+  body:`
+  <p>影之叛亂是艾瑟瑞亞歷史上最接近「大陸級災難」的一次危機,也是三大君主僅有的一次聯合出兵案例。</p>
+
+  <h2>背景</h2>
+  <p>紀元4200興起的<a class="wl" href="#pantheon-faith">永夜真理教</a>,經過近1700年的地下發展,在
+  <a class="wl" href="#nation-umbral">黑淵母邦</a>內部逐漸取得部分貴族暗中支持,教義主張的「永夜終將吞噬光明」
+  也從單純信仰演變為具體的政治野心。</p>
+
+  <h2>事件經過</h2>
+  <p>真理教激進派串聯部分影魅,趁世界樹某次年度「流淚」儀式防備鬆懈之際,試圖闖入<a class="wl" href="#nation-rootreach">根都</a>
+  奪取<a class="wl" href="#legendary-artifacts">世界樹之淚</a>,並企圖以<a class="wl" href="#legendary-artifacts">闇蝕之心</a>
+  逆轉<a class="wl" href="#magic-system">魔力循環</a>,引發大陸級「枯萎期」以「淨化」世界。陰謀被護根者及時察覺,
+  熔焰王朝卡蜜拉女王、契約王朝莉莉絲五世與黑淵母邦當時的暗后罕見聯合出兵,將叛軍鎮壓於根都外圍。</p>
+
+  <h2>餘波</h2>
+  <p>首謀影魅下落不明,<a class="wl" href="#legendary-artifacts">闇蝕之心</a>也在混亂中失蹤,至今未被尋回。倖存的影魅殘部退居
+  <a class="wl" href="#unclaimed-territories">未圖之境</a>,形成<a class="wl" href="#unclaimed-territories">影裔殘部</a>;
+  永夜真理教則轉為更隱密的地下活動,<a class="wl" href="#nation-umbral">黑淵母邦</a>與<a class="wl" href="#nation-covenant">契約王朝</a>
+  至今對其保持高度戒備。三大君主聯合出兵的先例,也成為<a class="wl" href="#pantheon-faith">當代預言</a>被反覆引用討論的歷史參照。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜真理教</span><span class="tag">#闇蝕之心</span><span class="tag">#影裔殘部</span><span class="tag">#當代預言</span>
+  </div>
+  `
+},
+
+/* ---------------- 各國政體 ---------------- */
+'nation-pyraxis':{
+  title:'熔焰王國', category:'各國政體', domain:'ember', tags:['政體','熔焰王國','龍女'],
+  alt:'Pyraxis Dominion',
+  infobox:{'政體類型':'世襲君主制(母系)','建立時間':'紀元1200(<a class="wl" href="#event-sky-war">天穹之戰</a>後)','首都':'赤鑄都(Emberholt)','現任統治者':'<a class="wl" href="#royal-lineages">妃嵐女王</a>(第38代)','核心種族':'<a class="wl" href="#race-dragonkin">龍女</a>'},
+  body:`
+  <p>熔焰王國是<a class="wl" href="#domain-ember">炙炎山脈</a>的核心政體,以龍女母系氏族為統治核心,採「爐火議會制」,
+  由各大氏族的最強者「爐主」共同推舉「熔焰女王」統領全境。</p>
+
+  <h2>歷史</h2>
+  <p>建國於<a class="wl" href="#event-sky-war">天穹之戰</a>之後,初代女王伊格妮絲一世以戰功統一原本各自為政的龍女氏族,
+  終結了戰前氏族間為爭奪火山資源而長期存在的零星衝突。完整世系詳見<a class="wl" href="#royal-lineages">王室譜系</a>。</p>
+
+  <h2>社會與文化</h2>
+  <p>王國內部氏族地位並非世襲固定,而是依「爐火議會」定期考核的戰功與資源貢獻重新排序,這使熔焰王國政治充滿動態競爭——
+  即便是王室嫡系,若表現不如預期也可能被邊緣化。<a class="wl" href="#race-dragonkin">龍女</a>崇尚力量與熱情的傳統,
+  在此政體下被進一步制度化為「爐火積分」考核系統。</p>
+
+  <h2>地標</h2>
+  <p>赤鑄都建於熔焰議事廳周邊,裂焰山脊與永燃谷分別是主要的火山資源地與宗教聖地。</p>
+
+  <h2>對外關係</h2>
+  <p>與<a class="wl" href="#nation-kindling">焰狐盟</a>世代結盟;與<a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>
+  因<a class="wl" href="#transit-network">火月之路</a>貿易維持謹慎夥伴關係,偶因晶礦採集權起摩擦;對永夜深淵的兩大政體抱持務實但保留戒心的態度。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#炙炎山脈</span><span class="tag">#龍女</span><span class="tag">#天穹之戰</span><span class="tag">#破天槍</span>
+  </div>
+  `
+},
+'nation-kindling':{
+  title:'焰狐盟', category:'各國政體', domain:'ember', tags:['政體','焰狐盟','炎狐'],
+  alt:'Kindling Accord',
+  infobox:{'政體類型':'部落聯盟(輪值代表制)','建立時間':'不可考(先於熔焰王國)','中心':'蜂鳴鎮','核心種族':'炎狐'},
+  body:`
+  <p>焰狐盟是炎狐一族鬆散的部落聯盟,無中央君主,以蜂鳴鎮(焰蜂塔周邊聚落)為貿易與議事節點,推派輪值代表與
+  <a class="wl" href="#nation-pyraxis">熔焰王國</a>交涉。</p>
+
+  <h2>歷史與現況</h2>
+  <p>焰狐盟的歷史遠比記載的政治實體更古老,傳說早於熔焰王朝建立前,炎狐族就已在焰蜂塔周邊發展出穩定的蜂蜜貿易網絡。
+  與熔焰王國的結盟關係並非臣屬,而是基於長期互利的貿易夥伴協議——龍女提供軍事保護,炎狐則以焰翼蜂蜜與精湛的蜂巢建築技術作為回報。</p>
+
+  <h2>社會與文化</h2>
+  <p>相較於龍女的積分競爭文化,焰狐盟的政治文化更重視協商與長期信譽,輪值代表制度確保沒有單一氏族能長期壟斷話語權。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#炙炎山脈</span><span class="tag">#熔焰王國</span>
+  </div>
+  `
+},
+'nation-lunarfang':{
+  title:'月伏部落聯盟', category:'各國政體', domain:'lunar', tags:['政體','月伏部落聯盟','狼女'],
+  alt:'Lunar Fang Confederacy',
+  infobox:{'政體類型':'部落制(月下議會)','建立時間':'不可考','中心':'月下議會樹','核心種族':'<a class="wl" href="#race-lunarfang">狼女</a>'},
+  body:`
+  <p>月伏部落聯盟是<a class="wl" href="#domain-lunar">月影古林</a>狼女各部落組成的鬆散政治聯盟,無固定首都,最高權力機構
+  「月下議會」依滿月週期於月下議會樹召開,由各部落酋長「月牙首領」輪流主持。</p>
+
+  <h2>歷史</h2>
+  <p>聯盟並非一次性建立,而是歷經數個世紀,由原本各自為戰的狼群部落逐漸整合而成,整合過程並不總是和平——與至今仍游離於
+  聯盟之外的<a class="wl" href="#minor-factions">荒血部</a>之間的緊張關係,某種程度上正是這段整合史遺留的傷痕。
+  紀元2450「<a class="wl" href="#history">月之狂亂</a>」是聯盟史上最動盪的時期,魔力潮汐失控引發長達三年的集體狂熱期,
+  幾乎導致聯盟瓦解,最終在當時月牙首領的強力領導下重整秩序。</p>
+
+  <h2>社會與文化</h2>
+  <p>「月之羈絆」儀式不僅是個人的終身伴侶儀式,同時也具備政治功能——跨部落的月之羈絆常被用來鞏固部落間的同盟關係。</p>
+
+  <h2>對外關係</h2>
+  <p>與<a class="wl" href="#nation-dreamsilk">夢絲城</a>維持互利貿易同盟;與<a class="wl" href="#minor-factions">荒血部</a>
+  長期處於低烈度邊境衝突;與<a class="wl" href="#nation-pyraxis">熔焰王國</a>因火月之路保持謹慎的商業夥伴關係。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月影古林</span><span class="tag">#狼女</span><span class="tag">#月之狂亂</span>
+  </div>
+  `
+},
+'nation-dreamsilk':{
+  title:'夢絲城', category:'各國政體', domain:'lunar', tags:['政體','夢絲城','狐女'],
+  alt:'Dreamsilk City',
+  infobox:{'政體類型':'城邦制(師徒制長老院)','建立時間':'不可考','位置':'月影古林邊緣','核心種族':'<a class="wl" href="#race-kitsune">狐女/九尾狐</a>'},
+  body:`
+  <p>夢絲城是<a class="wl" href="#race-kitsune">狐女/九尾狐</a>建立的城邦式聚落,採「師徒制長老院」統治,城市本身即是巨大的
+  夢織塔建築群聚落,以貿易與資訊仲介聞名全大陸。</p>
+
+  <h2>社會與文化</h2>
+  <p>不同於<a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>的武力政治,夢絲城的權力結構建立在「情報」與「智慧傳承」之上——
+  長老院成員的地位取決於其掌握的跨域情報網絡規模與師徒傳承的聲望,而非戰功或血統。這使夢絲城成為艾瑟瑞亞事實上的
+  「情報交易中心」,各域的外交使節與商人都樂於在此打探消息、交換情報。</p>
+
+  <h2>對外關係</h2>
+  <p>與月伏部落聯盟維持互利貿易同盟(狼女提供皮草與月影鹿角,夢絲城提供幻夢染工藝品與情報);因其中立的情報仲介角色,
+  與五域皆保持良好關係,鮮少捲入直接的政治衝突。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月影古林</span><span class="tag">#狐女</span>
+  </div>
+  `
+},
+'nation-covenant':{
+  title:'契約王朝', category:'各國政體', domain:'abyss', tags:['政體','契約王朝','魅魔'],
+  alt:'Covenant Dynasty',
+  infobox:{'政體類型':'世襲君主制(階級制)','建立時間':'紀元3120(<a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>)','首都':'契約都','現任統治者':'<a class="wl" href="#royal-lineages">莉莉絲七世</a>(本名薇夏)'},
+  body:`
+  <p>契約王朝是<a class="wl" href="#race-lilith">魅魔</a>的階級制王朝,女王世襲統治深淵之心,貴族依「情慾契約」數量與品質決定爵位,
+  學徒則服侍貴族以換取晉升機會。</p>
+
+  <h2>歷史</h2>
+  <p>建立於<a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>事件,是永夜深淵在第一次魔力崩壞後陷入長期無序狀態時,
+  由始祖莉莉絲之影一手建立的秩序,完整世系詳見<a class="wl" href="#royal-lineages">王室譜系</a>。歷代女王皆沿用「莉莉絲」為
+  攝政稱號,象徵秩序與血脈的延續,而非單純世襲血緣。</p>
+
+  <h2>社會與文化</h2>
+  <p>「情慾契約」制度將原本混亂的個人關係與資源交換規則化,契約手鐲記載每位魅魔已締結的正式契約摘要,是社會地位最直觀的
+  識別標誌。契約書法將這套制度昇華為藝術形式,<a class="wl" href="#legendary-artifacts">始祖契約書</a>更被奉為神器供奉於契約廳。</p>
+
+  <h2>對外關係</h2>
+  <p>與<a class="wl" href="#nation-umbral">黑淵母邦</a>名義上共享永夜深淵統治權,實則長期暗中角力,爭奪回聲深坑等戰略地標
+  控制權;兩者對<a class="wl" href="#unclaimed-territories">影裔殘部</a>則採一致鎮壓立場。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜深淵</span><span class="tag">#魅魔</span><span class="tag">#莉莉絲降臨</span><span class="tag">#始祖契約書</span>
+  </div>
+  `
+},
+'nation-umbral':{
+  title:'黑淵母邦', category:'各國政體', domain:'abyss', tags:['政體','黑淵母邦','黑暗精靈'],
+  alt:'Umbral Matriarchy',
+  infobox:{'政體類型':'世襲君主制(母系階級)','建立時間':'紀元1450','首都':'陰廷','現任統治者':'<a class="wl" href="#royal-lineages">賽妮絲</a>(暗后)'},
+  body:`
+  <p>黑淵母邦是<a class="wl" href="#race-drow">黑暗精靈</a>的嚴格母系階級政體,由「暗后」統治,某種程度上是對
+  <a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>後永夜深淵新秩序的回應與制衡——開國暗后陰紗統一原本分散的部族,
+  建立起與契約王朝分庭抗禮的第二權力中心。</p>
+
+  <h2>社會與文化</h2>
+  <p>與契約王朝的「契約」邏輯不同,黑淵母邦的階級地位建立在頭飾繁複程度與血統純正性上,暗后頭飾最為華麗誇張。
+  內部盛行<a class="wl" href="#pantheon-faith">永夜真理教</a>,主張永夜才是太虛真正的本質,被泛大陸主流的世界樹信仰視為異端——
+  真理教的興起某種程度上也是黑淵母邦區別於契約王朝、鞏固自身文化認同的手段。</p>
+
+  <h2>對外關係</h2>
+  <p>與<a class="wl" href="#nation-covenant">契約王朝</a>維持既競爭又合作的複雜關係;紀元5890曾與熔焰王朝、契約王朝聯合鎮壓
+  <a class="wl" href="#event-shadow-rebellion">影之叛亂</a>,是罕見的跨政體軍事合作案例。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜深淵</span><span class="tag">#黑暗精靈</span><span class="tag">#永夜真理教</span><span class="tag">#影之叛亂</span>
+  </div>
+  `
+},
+'nation-petalconcord':{
+  title:'花瓣聯盟', category:'各國政體', domain:'bloom', tags:['政體','花瓣聯盟','花精'],
+  alt:'Petal Concord',
+  infobox:{'政體類型':'季節輪替議會制','建立時間':'不可考','中心':'花瓣議會殿','核心種族':'<a class="wl" href="#race-bloomsprites">花精</a>'},
+  body:`
+  <p>花瓣聯盟是<a class="wl" href="#race-bloomsprites">花精</a>的政治實體,無固定領導者,依春夏秋冬更替主持議會的代表輪值,
+  首都花瓣議會殿本身也隨季節「遷移」外觀,是艾瑟瑞亞唯一一個「政治中心會換季」的政體。</p>
+
+  <h2>社會與文化</h2>
+  <p>輪替制度直接呼應花精「珍惜當下」的文化哲學——沒有任何一位代表能長期掌權,恰如花精服飾隨季節重製的短暫美學。</p>
+
+  <h2>對外關係</h2>
+  <p>與同域的<a class="wl" href="#nation-rootreach">根都</a>關係密切,共同守護世界樹周邊事務;對其他域則保持開放但不主動介入的態度。</p>
+
+  <h2>現況</h2>
+  <p>「新生代」的世代交替氛圍在花瓣聯盟內部反而不太明顯——輪替制度本就確保沒有人能長期掌權,年輕代表與年長代表的更替早已是
+  常態,這使花瓣聯盟成為五域中少數對當前政治張力「無感」的政體。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#花精</span>
+  </div>
+  `
+},
+'nation-rootreach':{
+  title:'根都', category:'各國政體', domain:'bloom', tags:['政體','根都','樹精','中立聖地'],
+  alt:'Rootreach',
+  infobox:{'政體類型':'樹精長老院管理','建立時間':'世界樹誕生後不久','位置':'環繞世界樹根基','地位':'全大陸公認中立聖地'},
+  body:`
+  <p>根都是<a class="wl" href="#race-dryads">樹精</a>聚落,環繞世界樹艾瑟瑞姆根基而建,是全大陸唯一被所有種族視為「中立聖地」的
+  政治實體,由樹精長老院管理,負責世界樹開花季的儀式統籌,同時也是<a class="wl" href="#pantheon-faith">世界樹信仰</a>護根者教團的
+  總部所在。</p>
+
+  <h2>歷史地位的確立</h2>
+  <p>根都的中立地位並非自始即被所有政體認可,而是在紀元3780<a class="wl" href="#event-grand-concord">大交融協定</a>簽署後
+  才正式確立為五域共同承認的聖地——<a class="wl" href="#legendary-artifacts">五域晶約</a>至今仍供奉於此。</p>
+
+  <h2>社會與文化</h2>
+  <p>大長老塞倫領導的長老院,職責不僅是宗教事務,也包含仲裁跨域爭端——由於根都的絕對中立性,許多域間糾紛最終都會提交
+  根都長老院調解。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#樹精</span><span class="tag">#大交融協定</span><span class="tag">#信仰體系</span>
+  </div>
+  `
+},
+'nation-starisles':{
+  title:'十二星島盟', category:'各國政體', domain:'bloom', tags:['政體','十二星島盟','星塵龍女'],
+  alt:'Twelve Star Isles',
+  infobox:{'政體類型':'鬆散聯盟(占卜決策)','位置':'十二座依星座命名的漂浮小島','核心種族':'<a class="wl" href="#race-stardust">星塵龍女</a>'},
+  body:`
+  <p>十二星島盟是<a class="wl" href="#race-stardust">星塵龍女</a>依星象分組而成的鬆散聯盟,分布於十二座漂浮小島,各島依所屬星座
+  命名,無中央政府,重大事務由「星辰交融」儀式的占卜結果決定,<a class="wl" href="#legendary-artifacts">星塵占卜盤</a>是此決策
+  過程中不可或缺的工具。</p>
+
+  <h2>社會與文化</h2>
+  <p>相較於其他政體,十二星島盟的政治決策帶有強烈的宿命論色彩——族群相信重大決策的結果早已寫在星象之中,占卜不是預測而是
+  「揭示」。這種文化也使星塵龍女在域內外交事務上顯得超然,鮮少主動介入政治角力。</p>
+
+  <h2>對外關係</h2>
+  <p>與同域的<a class="wl" href="#nation-petalconcord">花瓣聯盟</a>、<a class="wl" href="#nation-rootreach">根都</a>關係良好但保持距離;
+  因其超然立場,常被其他域邀請作為調停的第三方。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#星塵龍女</span><span class="tag">#星塵占卜盤</span>
+  </div>
+  `
+},
+'nation-choral':{
+  title:'歌詠議會', category:'各國政體', domain:'trench', tags:['政體','歌詠議會','海妖'],
+  alt:'Choral Assembly',
+  infobox:{'政體類型':'集體合唱決策制','建立時間':'不可考','首都':'回音礁','現任領袖':'<a class="wl" href="#notable-figures">珂拉莉</a>(大合唱長)'},
+  body:`
+  <p>歌詠議會是<a class="wl" href="#race-sirens">海妖</a>母系歌詠氏族聯合體,以「合唱」形式集體決策,無單一領袖,重大事務需
+  全體氏族「唱和」達成共識方可通過,現任最高地位者為大合唱長珂拉莉,掌管<a class="wl" href="#legendary-artifacts">光歌鯨骨笛</a>。</p>
+
+  <h2>社會與文化</h2>
+  <p>這種決策方式直接體現海妖「重視和諧與共鳴、討厭暴力衝突」的文化核心——任何提案若無法達成足夠的「和聲共識」便會自動擱置,
+  確保重大決策必然反映集體意志而非少數人的偏好。</p>
+
+  <h2>對外關係</h2>
+  <p>與<a class="wl" href="#nation-tidewatch">潮汐議會</a>共享回音礁作為政治中心,權力共享關係緊密;透過
+  <a class="wl" href="#minor-factions">燈籠淺礁站</a>與域外世界維持穩定但有限的貿易往來。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#深海裂隙</span><span class="tag">#海妖</span><span class="tag">#光歌鯨骨笛</span>
+  </div>
+  `
+},
+'nation-tidewatch':{
+  title:'潮汐議會', category:'各國政體', domain:'trench', tags:['政體','潮汐議會','水精靈'],
+  alt:'Tidewatch Council',
+  infobox:{'政體類型':'獨立行政議會','位置':'回音礁(與歌詠議會共享)','核心種族':'水精靈'},
+  body:`
+  <p>潮汐議會是水精靈的政體,負責<a class="wl" href="#domain-trench">深海裂隙</a>與陸地/淺海之間的秩序維護,與
+  <a class="wl" href="#nation-choral">歌詠議會</a>共享回音礁作為政治中心,但保有獨立行政權——兩者分工明確:歌詠議會處理域內事務
+  與信仰儀式,潮汐議會則專責對外邊界巡守與淺海貿易安全。</p>
+
+  <h2>對外關係</h2>
+  <p>與歌詠議會權力共享,鮮少衝突,是艾瑟瑞亞政治結構中少見的「雙軌共治且高度和諧」案例。</p>
+
+  <h2>現況</h2>
+  <p>相較於陸地五國的層層權謀,潮汐議會的運作極為低調——多數陸上種族甚至不清楚深海裂隙其實由兩個獨立政體共治,
+  這種「隱形治理」某種程度上也是水精靈刻意維持的低調策略,避免捲入陸地政治的紛爭。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#深海裂隙</span><span class="tag">#歌詠議會</span>
+  </div>
+  `
+},
+'minor-factions':{
+  title:'次要勢力與組織', category:'各國政體', domain:null, tags:['次要勢力','飛地','游牧','隱世'],
+  alt:'Minor Factions & Organizations',
+  body:`
+  <p>除了各域的主要政體,艾瑟瑞亞還存在一批規模較小、卻各具特色的勢力與組織,它們雖不主導域內政治,卻在跨域關係與地方敘事中
+  扮演不可忽視的角色。</p>
+
+  <h2>熔岩魅魔飛地</h2>
+  <p>少數<a class="wl" href="#race-lilith">魅魔</a>貴族因政治聯姻或貿易協議定居<a class="wl" href="#domain-ember">炙炎山脈</a>,
+  建立小型飛地「灼焰廳」,作為永夜深淵與炙炎山脈的外交橋樑,人數雖少但因身兼兩域的雙重身分,常在外交場合扮演關鍵中介角色。</p>
+
+  <h2>荒血部</h2>
+  <p><a class="wl" href="#race-bloodfangfox">血狐</a>游牧氏族,居無定所,活動於<a class="wl" href="#domain-lunar">月影古林</a>邊境的荒僻地帶,與
+  <a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>關係緊張——領地與獵場的歷史糾紛可追溯至部落聯盟整合初期,至今仍未完全化解。</p>
+
+  <h2>銀月庇護地</h2>
+  <p><a class="wl" href="#race-moonsprite">月光精靈</a>隱世聚落,深居林中最古老的樹冠層,幾乎不參與外交事務,僅在世界樹開花季現身,是月影古林最神秘、最少被記載的族群。</p>
+
+  <h2>夢境邊境守望者</h2>
+  <p><a class="wl" href="#race-dreamdemon">夢魔</a>組成的隱密組織,職責是巡守<a class="wl" href="#domain-bloom">晶夢花海</a>與<a class="wl" href="#domain-abyss">永夜深淵</a>
+  交界的夢淵之路,防止惡夢污染滲透,組織成員身分極少公開,外界對其實際規模與運作方式所知有限。</p>
+
+  <h2>燈籠淺礁站</h2>
+  <p><a class="wl" href="#race-crystalwing">晶翼蝶女</a>建立的小型前哨站,位於深海與淺海交界,主要負責與<a class="wl" href="#domain-trench">深海裂隙</a>以外世界的貿易往來,
+  是深海裂隙對外交流的實質窗口。</p>
+
+  <h2>影裔殘部</h2>
+  <p>紀元5890<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>失敗後,倖存的<a class="wl" href="#race-shadowkin">影魅</a>退居深淵最幽深、未被繪製地圖的角落,
+  形成分散的地下反抗網絡,不被<a class="wl" href="#nation-covenant">契約王朝</a>與<a class="wl" href="#nation-umbral">黑淵母邦</a>
+  承認為合法勢力,是永夜深淵當前最大的政治不穩定因素,詳見<a class="wl" href="#unclaimed-territories">未歸屬地帶</a>。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#未歸屬地帶</span><span class="tag">#影之叛亂</span>
+  </div>
+  `
+},
+
+/* ---------------- 種族 ---------------- */
+'race-dragonkin':{
+  title:'龍女', category:'種族', domain:'ember', tags:['種族','炙炎山脈','母系'],
+  alt:'Emberkin Dragonkin',
+  infobox:{'棲地':'<a class="wl" href="#domain-ember">炙炎山脈</a>','社會結構':'母系氏族,強者為尊','代表儀式':'火之誓約','藝術傳統':'熔金雕塑'},
+  body:`
+  <p>龍女(Emberkin Dragonkin)是<a class="wl" href="#domain-ember">炙炎山脈</a>的頂級種族,採行母系氏族制度,以力量決定地位高低。
+  現任統治者為<a class="wl" href="#royal-lineages">熔焰王朝</a>第38代女王「妃嵐」,完整世系詳見<a class="wl" href="#royal-lineages">王室譜系</a>。</p>
+  <h2>社會與文化</h2>
+  <p>崇尚力量與熱情,「火之誓約」被視為重要的社交與力量提升儀式。族群喜歡收集閃亮物品,藝術創作以火焰與金屬為主題。</p>
+  <h2>服飾</h2>
+  <p>日常穿著輕薄耐熱的火蠶絲布料,剪裁俐落強調肢體線條與力量感,常見露肩、露臂設計以展示鱗片紋路。「火之誓約」慶典時穿著鑲嵌火晶的
+  重甲式禮服,晶石數量代表氏族排名。偏好收集閃亮金屬飾品,項鍊、臂環多為戰利品或世代傳承之物。</p>
+  <h2>藝術:熔金雕塑</h2>
+  <p>以熔岩澆鑄技法製作金屬雕像,題材多為戰鬥英雄。</p>
+  <h2>文字</h2>
+  <p>使用「火焰符文」,刻在金屬或岩石上會微微發熱。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#炙炎山脈</span><span class="tag">#星塵龍女</span><span class="tag">#星滅龍王</span>
+  </div>
+  `
+},
+'race-kitsune':{
+  title:'狐女 / 九尾狐', category:'種族', domain:'lunar', tags:['種族','月影古林'],
+  alt:'Kitsune',
+  infobox:{'棲地':'<a class="wl" href="#domain-lunar">月影古林</a>','社會結構':'鬆散氏族 + 師徒制','代表藝術':'幻夢藝術','藝術傳統':'幻夢卷軸畫'},
+  body:`
+  <p>狐女(九尾狐,Kitsune)以智慧與誘惑聞名,發展出豐富的「幻夢藝術」,採行鬆散氏族與師徒制並行的社會結構。</p>
+  <h2>文化</h2>
+  <p>愛好宴會與故事講述,重視智慧的傳承勝過血緣位階。</p>
+  <h2>服飾</h2>
+  <p>層疊輕紗與飄逸長袍,強調「若隱若現」的美感。獨門工藝「幻夢染」技法能讓布料圖案隨穿著者情緒微微變化色澤。面具與扇子是重要身分象徵,
+  面具花紋會記錄個人的重要人生事件。</p>
+  <h2>藝術:幻夢卷軸畫</h2>
+  <p>畫作內容會隨觀看者心境呈現不同景象,是狐女最具代表性的藝術形式。</p>
+  <h2>文字</h2>
+  <p>使用「幻夢卷軸文字」,會隨閱讀者心情改變含義。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月影古林</span><span class="tag">#月之狂獵</span>
+  </div>
+  `
+},
+'race-lunarfang':{
+  title:'狼女', category:'種族', domain:'lunar', tags:['種族','月影古林','部落制'],
+  alt:'Lunar Fang',
+  infobox:{'棲地':'<a class="wl" href="#domain-lunar">月影古林</a>','社會結構':'部落制,月下議會','代表儀式':'月之羈絆','藝術傳統':'月光爪痕雕刻'},
+  body:`
+  <p>狼女(Lunar Fang)實行部落制與月下議會制度,是月影古林最具戰士文化的種族。</p>
+  <h2>文化</h2>
+  <p>崇尚榮譽與忠誠,「月之羈絆」是建立終生伴侶關係的重要儀式。戰士文化強烈,戰功以刺青形式記錄在身,而非透過服飾裝飾,體現部落榮譽文化。</p>
+  <h2>服飾</h2>
+  <p>實用皮革與月光絲混紡,剪裁簡潔俐落,便於戰鬥與狩獵。「月之羈絆」儀式服採用銀白色系,袖口與衣領綴有月影鹿角雕刻的飾扣。</p>
+  <h2>藝術:月光爪痕雕刻</h2>
+  <p>以利爪在木石上雕刻圖騰,用以記錄部落歷史。</p>
+  <h2>文字</h2>
+  <p>「月影爪痕」——以爪痕形式刻在樹皮或石頭上。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月影古林</span><span class="tag">#月之狂獵</span><span class="tag">#月之狂亂</span>
+  </div>
+  `
+},
+'race-lilith':{
+  title:'魅魔', category:'種族', domain:'abyss', tags:['種族','永夜深淵','階級制'],
+  alt:"Lilith's Daughters",
+  infobox:{'棲地':'<a class="wl" href="#domain-abyss">永夜深淵</a>','社會結構':'女王 → 貴族 → 學徒','代表制度':'情慾契約系統','藝術傳統':'契約書法'},
+  body:`
+  <p>魅魔(Lilith's Daughters)是永夜深淵階級制度最鮮明的種族,自稱莉莉絲始祖之後裔。</p>
+  <h2>文化</h2>
+  <p>發展出極度開放的享樂主義文化,並建立出複雜的「情慾契約」系統,將社交、交易與力量結構化為正式契約制度。</p>
+  <h2>服飾</h2>
+  <p>依階級嚴格區分服色——女王著暗紫與黑金交織長袍,貴族次之,學徒服飾樸素。服飾多鑲嵌能記錄契約的晶石紐扣。契約手鐲是身分證明,
+  記載該魅魔已締結的所有正式契約摘要。</p>
+  <h2>藝術:契約書法</h2>
+  <p>將法律與藝術結合,契約文書本身即是精緻的工藝品。</p>
+  <h2>文字</h2>
+  <p>使用「慾望契約文」書寫正式文書。</p>
+  <h2>起源</h2>
+  <p>始祖<a class="wl" href="#creature-lilithshadow">莉莉絲之影</a>於紀元3120「<a class="wl" href="#history">莉莉絲降臨</a>」事件中出現,
+  建立了永夜深淵至今的階級秩序。歷代女王皆沿用「莉莉絲」為攝政稱號,現任女王為莉莉絲七世(本名薇夏),完整世系詳見
+  <a class="wl" href="#royal-lineages">王室譜系</a>。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜深淵</span><span class="tag">#莉莉絲之影</span><span class="tag">#深淵冬眠</span>
+  </div>
+  `
+},
+'race-drow':{
+  title:'黑暗精靈', category:'種族', domain:'abyss', tags:['種族','永夜深淵','母系階級'],
+  alt:"Drow'Vey",
+  infobox:{'棲地':'<a class="wl" href="#domain-abyss">永夜深淵</a>','社會結構':'嚴格母系階級社會','藝術傳統':'晶石共鳴樂器'},
+  body:`
+  <p>黑暗精靈(Drow'Vey)實行嚴格的母系階級社會,崇拜暗影與權力。</p>
+  <h2>服飾</h2>
+  <p>深色系緊身剪裁,強調威嚴與神秘感,布料常織入細微晶石粉末,於暗處微微發光。母系社會地位透過頭飾繁複程度區分,女王頭飾最為華麗誇張。</p>
+  <h2>藝術:晶石共鳴樂器</h2>
+  <p>利用晶石震動頻率製造音樂,聲音只有具備魔力共鳴能力者可聞。</p>
+  <h2>文字</h2>
+  <p>「晶石脈動文」——需要魔力共鳴才能閱讀,是五族文字中最具排他性的一種。</p>
+  <h2>信仰</h2>
+  <p>黑暗精靈內部盛行「<a class="wl" href="#pantheon-faith">永夜真理教</a>」,主張永夜才是太虛真正的本質,被泛大陸主流的世界樹信仰視為異端。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜深淵</span><span class="tag">#契約廳</span>
+  </div>
+  `
+},
+'race-sirens':{
+  title:'海妖', category:'種族', domain:'trench', tags:['種族','深海裂隙','母系歌詠氏族'],
+  alt:'Sirens of the Trench',
+  infobox:{'棲地':'<a class="wl" href="#domain-trench">深海裂隙</a>','社會結構':'母系歌詠氏族','代表儀式':'海之合唱','藝術傳統':'聲景雕塑'},
+  body:`
+  <p>海妖(Sirens of the Trench)以歌聲作為主要語言,建立母系歌詠氏族社會。</p>
+  <h2>文化</h2>
+  <p>重視和諧與共鳴,厭惡暴力衝突。「海之合唱」是族群重要的情感交流方式。</p>
+  <h2>服飾</h2>
+  <p>近乎透明的水紋布料,隨水流自然飄動,不強調遮蔽而強調律動與和諧美感。貝殼與珍珠編織的髮飾依「歌詠氏族」不同分支有專屬花紋。</p>
+  <h2>藝術:聲景雕塑</h2>
+  <p>利用珊瑚礁天然聲學特性「雕刻」出獨特迴音空間,是海妖獨有的藝術形式。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#深海裂隙</span><span class="tag">#光歌鯨神殿</span><span class="tag">#永眠海皇</span>
+  </div>
+  `
+},
+'race-stardust':{
+  title:'星塵龍女', category:'種族', domain:'bloom', tags:['種族','晶夢花海','星座氏族'],
+  alt:'Stardust Dragonkin',
+  infobox:{'棲地':'<a class="wl" href="#domain-bloom">晶夢花海</a>','社會結構':'星座氏族(依星象分組)','代表儀式':'星辰交融','藝術傳統':'星圖鑲嵌畫'},
+  body:`
+  <p>星塵龍女(Stardust Dragonkin)是與<a class="wl" href="#race-dragonkin">炙炎山脈龍女</a>同源但演化方向截然不同的支系,
+  棲居於<a class="wl" href="#domain-bloom">晶夢花海</a>,依星象組成「星座氏族」。</p>
+  <h2>文化</h2>
+  <p>崇拜星空與命運,「星辰交融」儀式用來占卜與強化命運連結。</p>
+  <h2>服飾</h2>
+  <p>深藍紫色系長袍,綴滿模擬星座排列的水晶碎片。服飾圖案依出生星象客製化,是個人命運的視覺化呈現。</p>
+  <h2>藝術:星圖鑲嵌畫</h2>
+  <p>以水晶碎片拼貼夜空星座,兼具占星功能的獨特藝術形式。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#夢露花塔</span><span class="tag">#覺醒之途</span>
+  </div>
+  `
+},
+'race-bloomsprites':{
+  title:'花精', category:'種族', domain:'bloom', tags:['種族','晶夢花海','花瓣議會'],
+  alt:'Bloom Sprites',
+  infobox:{'棲地':'<a class="wl" href="#domain-bloom">晶夢花海</a>','社會結構':'花瓣議會(季節輪替領導)','藝術傳統':'活體花藝'},
+  body:`
+  <p>花精(Bloom Sprites)採行「花瓣議會」制度,領導權隨季節輪替。</p>
+  <h2>文化</h2>
+  <p>發展出極度開放的享樂文化,重視美學與短暫歡愉,將日常社交與魔力分享緊密結合。</p>
+  <h2>服飾</h2>
+  <p>以花瓣、葉片直接編織而成,隨季節更替,幾乎每季重製一次——服飾壽命短暫,象徵花精「珍惜當下」的生活哲學。</p>
+  <h2>藝術:活體花藝</h2>
+  <p>培育會隨時間展現不同形態的動態花藝作品,是花精最具代表性的創作。</p>
+  <h2>相關傳奇</h2>
+  <p><a class="wl" href="#creature-dreamweaver">夢境織女</a>是花精族最古老的長者,掌管全大陸夢境網絡。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#花瓣議會殿</span><span class="tag">#覺醒之途</span>
+  </div>
+  `
+},
+'race-dryads':{
+  title:'樹精', category:'種族', domain:'bloom', tags:['種族','晶夢花海','根系聯盟'],
+  alt:'Dryads',
+  infobox:{'棲地':'<a class="wl" href="#domain-bloom">晶夢花海</a>','社會結構':'根系聯盟(以世界樹為中心)','藝術傳統':'年輪詩歌'},
+  body:`
+  <p>樹精(Dryads)組成「根系聯盟」,以世界樹<a class="wl" href="#creature-titan">艾瑟瑞姆</a>為精神核心,是五域中壽命最長、性情最沉穩的種族。</p>
+  <h2>文化</h2>
+  <p>性情緩慢而深沉,極重視長期伴侶關係。</p>
+  <h2>服飾</h2>
+  <p>樹皮紋理長袍,質感厚重沉穩,象徵長壽與穩定。服飾會隨樹精年齡增長而「生長」,老年樹精的衣袍常綴滿年輪狀花紋。</p>
+  <h2>藝術:年輪詩歌</h2>
+  <p>將史詩刻於樹木年輪之中,需砍開樹幹才能閱讀——此技法僅施行於已故樹精身上,是一種莊重的悼念形式。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#世界樹</span>
+  </div>
+  `
+},
+'race-human':{
+  title:'人族', category:'種族', domain:null, tags:['種族','外來者','拓境行會聯合','未歸屬地帶'],
+  alt:'Humankind · 拓境者',
+  infobox:{'棲地':'<a class="wl" href="#pathfinders-hold">雲隙荒境・拓境城</a>','社會結構':'拓境行會聯合(鬆散商會制)','抵達時間':'紀元850前後(眾說紛紜)','魔法親和':'<a class="wl" href="#magic-system">共鳴系</a>特化,元素/情慾系天賦薄弱'},
+  body:`
+  <p>人族並非艾瑟瑞亞五大生態域「原生」的種族,而是<a class="wl" href="#history">紀元850「第一次魔力崩壞」</a>前後,
+  自某個不可考的裂隙墜入這座浮空大陸的外來者。他們沒有與任何一域天生的元素親和力,卻也因此發展出獨特的生存之道。</p>
+
+  <h2>起源:眾說紛紜的墜落</h2>
+  <p>關於人族的起源,大陸上流傳著至少三種說法,而人族自己也未能給出定論:</p>
+  <ol>
+    <li><b>崩壞裂隙說</b>——當年世界樹因過度開採陷入沉睡,現實的帷幕隨之出現裂縫,一批來自某個「近乎無魔」世界的人們,便從裂縫中墜落雲海,輾轉攀上艾瑟瑞亞。</li>
+    <li><b>失敗造物說</b>——部分<a class="wl" href="#race-dryads">樹精</a>學者認為,人族其實是世界樹早期夢境中一次「未完成的嘗試」——
+    詳見<a class="wl" href="#creation-myth">創世神話</a>——祂想像出不需依附特定元素也能存在的生命形式,卻因夢境尚未成熟而將其遺落在大陸邊緣。</li>
+    <li><b>先民說</b>——少數人族長老相信,他們的祖先其實遠比記載更早抵達此地,只是長期被排除在各域歷史敘事之外,
+    「紀元850」不過是他們終於被其他種族記錄下來的時間點,而非真正的抵達之時。</li>
+  </ol>
+  <p>無論何者為真,人族普遍接受一個事實:他們是這座大陸上最年輕、卻也最缺乏「與生俱來魔力」的族群。</p>
+
+  <h2>魔法親和:共鳴系的專家</h2>
+  <p>由於沒有特定的元素傾向,人族幾乎無法修習<a class="wl" href="#magic-system">元素系魔法</a>,情慾系魔力天賦也普遍薄弱。然而正因為
+  「一無所有」,他們反而在<a class="wl" href="#magic-system">共鳴系魔法</a>——也就是跨種族互動時最容易觸發的混合魔法——展現出異於他族的天賦,
+  使人族逐漸發展出「調停者」與「中介者」的社會角色。</p>
+
+  <h2>社會結構:拓境行會聯合</h2>
+  <p>人族沒有統一王國,而是以鬆散的商會與工匠公會形式組成<b>拓境行會聯合(Pathfinder's Concord)</b>,總部設於
+  <a class="wl" href="#unclaimed-territories">雲隙荒境</a>中由人族一手建立的據點——<a class="wl" href="#pathfinders-hold">拓境城(Pathfinder's Hold)</a>,
+  完整市容與行會結構詳見專頁介紹。</p>
+  <p>由於不受任何單一域的<a class="wl" href="#magic-system">魔力循環</a>束縛,人族成為<a class="wl" href="#transit-network">大陸交通網絡</a>
+  中雲舟商隊的主要操作者,穿梭於五域之間從事貿易、傳信與外交斡旋,也因此被部分排外種族稱為「無魔之民」——帶有輕蔑意味的稱呼,
+  人族自己則多半自稱「拓境者」。</p>
+
+  <h2>文化特色</h2>
+  <ul>
+    <li>沒有統一信仰,反而樂於吸收、記錄各族的<a class="wl" href="#creation-myth">創世異本</a>與歷史,拓境城因此擁有全大陸最完整的跨域史料庫。</li>
+    <li>建築風格混雜借用五域元素(熔鑄工法的骨架、珊瑚建材的防水塗層等),因地制宜,毫無「純粹」可言——這正是人族引以為傲之處。</li>
+    <li>因缺乏長壽或強大體魄,人族格外重視工具與契約精神,擅長鍛造與草擬跨域協議,是各政體外交場合常見的中立文書撰寫者。</li>
+  </ul>
+
+  <h2>對外關係</h2>
+  <p>人族在各域普遍被視為「有用但不完全被信任」的外來者——熔焰王國樂於雇用人族商隊,契約王朝欣賞人族草擬契約的嚴謹,
+  但黑淵母邦與部分保守的<a class="wl" href="#race-lunarfang">狼女</a>部落仍對這群「毫無魔力根基」的異類抱持戒心。人族之所以能在毫無元素親和力的情況下
+  仍壟斷大陸交通網絡的營運,關鍵便在於凱恩·灰旅所打造的<a class="wl" href="#legendary-artifacts">拓境羅盤</a>。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#拓境城</span><span class="tag">#雲隙荒境</span><span class="tag">#共鳴系魔法</span><span class="tag">#創世神話</span>
+  </div>
+  `
+},
+
+'race-emberfox':{
+  title:'炎狐', category:'種族', domain:'ember', tags:['種族','炙炎山脈','焰狐盟'],
+  alt:'Ember Fox',
+  infobox:{'棲地':'<a class="wl" href="#domain-ember">炙炎山脈</a>・蜂鳴鎮','政治實體':'<a class="wl" href="#nation-kindling">焰狐盟</a>','代表產業':'焰翼蜂蜜貿易'},
+  body:`
+  <p>炎狐是<a class="wl" href="#domain-ember">炙炎山脈</a>僅次於<a class="wl" href="#race-dragonkin">龍女</a>的重要種族,
+  以焰蜂塔為據點,發展出精湛的養蜂與蜂巢建築工藝,政治實體為<a class="wl" href="#nation-kindling">焰狐盟</a>。</p>
+  <h2>文化</h2>
+  <p>相較於龍女的積分競爭文化,炎狐重視協商與長期信譽,擅長談判與貿易斡旋,是熔焰王國對外貿易不可或缺的夥伴。</p>
+  <h2>外貌與習性</h2>
+  <p>體態較龍女纖細,尾部與耳廓覆有耐熱絨毛,擅長攀爬蜂巢結構高處作業。</p>
+  <h2>服飾</h2>
+  <p>輕薄的蜂蠟塗層工作服,便於在高溫環境中長時間勞作,重要場合則穿著綴有蜂蜜琥珀珠飾的正裝。</p>
+  <h2>藝術</h2>
+  <p>以蜂蠟雕刻與蜂巢幾何圖騰彩繪聞名,常見於焰蜂塔內部裝飾。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#炙炎山脈</span><span class="tag">#焰狐盟</span><span class="tag">#龍女</span>
+  </div>
+  `
+},
+'race-bloodfangfox':{
+  title:'血狐', category:'種族', domain:'lunar', tags:['種族','月影古林','荒血部','游牧'],
+  alt:'Bloodfang Fox',
+  infobox:{'棲地':'月影古林邊境','政治實體':'<a class="wl" href="#minor-factions">荒血部</a>(游牧)','與月伏部落聯盟關係':'長期緊張'},
+  body:`
+  <p>血狐是<a class="wl" href="#domain-lunar">月影古林</a>邊境的游牧氏族,組成<a class="wl" href="#minor-factions">荒血部</a>,
+  居無定所,與<a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>因領地與獵場糾紛長期關係緊張。</p>
+  <h2>文化</h2>
+  <p>不同於<a class="wl" href="#race-lunarfang">狼女</a>的部落榮譽文化,血狐更強調個體生存智慧與家族小單位的緊密連結,
+  不信任大型議會制度,這也是他們始終游離於月伏部落聯盟之外的根本原因。</p>
+  <h2>外貌</h2>
+  <p>毛色偏暗紅,體型較狼女纖瘦敏捷,適應快速遷徙的游牧生活。</p>
+  <h2>習性</h2>
+  <p>秋季「<a class="wl" href="#migration">月之狂獵</a>」時期,血狐雖不隸屬月伏部落聯盟,仍會加入遷徙尋找跨域伴侶,
+  是少數會與聯盟成員短暫互動的場合。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月影古林</span><span class="tag">#荒血部</span><span class="tag">#狼女</span>
+  </div>
+  `
+},
+'race-moonsprite':{
+  title:'月光精靈', category:'種族', domain:'lunar', tags:['種族','月影古林','銀月庇護地','隱世'],
+  alt:'Moonlight Sprite',
+  infobox:{'棲地':'<a class="wl" href="#minor-factions">銀月庇護地</a>(林冠最古老樹層)','社會結構':'隱世聚落','外交參與':'極低,僅開花季現身'},
+  body:`
+  <p>月光精靈是<a class="wl" href="#domain-lunar">月影古林</a>最神秘的種族,聚居於<a class="wl" href="#minor-factions">銀月庇護地</a>,
+  深居林中最古老的樹冠層,幾乎不參與任何外交事務。</p>
+  <h2>文化</h2>
+  <p>月光精靈相信「被看見」會削弱月光魔力的純粹性,因此極度避免與外界接觸,僅在<a class="wl" href="#magic-system">世界樹開花季</a>
+  這種全大陸盛會時才會短暫現身。</p>
+  <h2>外貌</h2>
+  <p>半透明的銀白色軀體,在月光下會若隱若現,新月時幾乎完全隱形。</p>
+  <h2>信仰</h2>
+  <p>對月光本身的崇拜近乎宗教性質,與<a class="wl" href="#pantheon-faith">白狼之母信仰</a>有部分重疊,但更為原始、去中心化。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#月影古林</span><span class="tag">#銀月庇護地</span>
+  </div>
+  `
+},
+'race-shadowkin':{
+  title:'影魅', category:'種族', domain:'abyss', tags:['種族','永夜深淵','影裔殘部','影之叛亂'],
+  alt:'Shadowkin',
+  infobox:{'棲地':'永夜深淵最深處','社會結構':'分散,部分已成為<a class="wl" href="#unclaimed-territories">影裔殘部</a>','現況':'高度警戒與污名化對象'},
+  body:`
+  <p>影魅是<a class="wl" href="#domain-abyss">永夜深淵</a>最古老、最難以捉摸的原生種族之一,棲息於連
+  <a class="wl" href="#race-drow">黑暗精靈</a>與<a class="wl" href="#race-lilith">魅魔</a>都鮮少踏足的更深層洞穴。</p>
+  <h2>歷史</h2>
+  <p>紀元5890「<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>」的主要發動者正是部分影魅,叛亂失敗後倖存者退居未圖之境,
+  形成<a class="wl" href="#unclaimed-territories">影裔殘部</a>,不被<a class="wl" href="#nation-covenant">契約王朝</a>與
+  <a class="wl" href="#nation-umbral">黑淵母邦</a>承認為合法勢力。</p>
+  <h2>文化與現況</h2>
+  <p>並非所有影魅都參與過叛亂——仍有部分影魅維持傳統的隱居生活方式,對政治毫無興趣,但自叛亂後,整個種族在永夜深淵普遍受到
+  猜忌與提防,即便無辜的影魅個體也常被投以戒備眼光,這種集體污名化正是「新生代」種族矛盾的縮影之一。</p>
+  <h2>外貌</h2>
+  <p>幾乎完全由陰影構成的模糊形體,僅在魔力波動強烈時才會短暫顯現輪廓。由於軀體並非血肉之驅,老化方式與其他種族截然不同,
+  外界(甚至影魅自己)都難以用常規歲數衡量個體的真實年歲——這也是<a class="wl" href="#char-nyle">奈爾</a>這類跨越數個世紀
+  仍維持相近樣貌的影魅存在的原因。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#永夜深淵</span><span class="tag">#影之叛亂</span><span class="tag">#影裔殘部</span>
+  </div>
+  `
+},
+'race-dreamdemon':{
+  title:'夢魔', category:'種族', domain:'bloom', tags:['種族','晶夢花海','夢境邊境守望者'],
+  alt:'Dream Demons',
+  infobox:{'棲地':'<a class="wl" href="#domain-bloom">晶夢花海</a>','政治實體':'<a class="wl" href="#minor-factions">夢境邊境守望者</a>(隱密組織)','職能':'夢境巡守'},
+  body:`
+  <p>夢魔是<a class="wl" href="#domain-bloom">晶夢花海</a>的原生種族之一,多數選擇加入<a class="wl" href="#minor-factions">夢境邊境守望者</a>,
+  巡守夢淵之路,防止惡夢污染滲透大陸。</p>
+  <h2>文化</h2>
+  <p>夢魔的社會結構高度隱密,成員身分極少公開,外界對其實際組織規模與運作方式所知有限——這種神秘性某種程度上是職責使然:
+  過度暴露身分會削弱他們在夢境層面的巡守能力。</p>
+  <h2>能力與職能</h2>
+  <p>據信夢魔天生對「濁夢境」(惡夢污染的雛形)特別敏感,能在污染擴散成實體威脅前及早察覺並清除。</p>
+  <h2>信仰</h2>
+  <p>部分夢魔亦參與<a class="wl" href="#creature-dreamweaver">夢境織女</a>信仰的祭儀,自視為她在人間的耳目。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#夢境邊境守望者</span><span class="tag">#夢境織女</span>
+  </div>
+  `
+},
+'race-watersprite':{
+  title:'水精靈', category:'種族', domain:'trench', tags:['種族','深海裂隙','潮汐議會'],
+  alt:'Water Sprites',
+  infobox:{'棲地':'<a class="wl" href="#domain-trench">深海裂隙</a>','政治實體':'<a class="wl" href="#nation-tidewatch">潮汐議會</a>','職能':'秩序維護'},
+  body:`
+  <p>水精靈是<a class="wl" href="#domain-trench">深海裂隙</a>的重要種族,組成<a class="wl" href="#nation-tidewatch">潮汐議會</a>,
+  負責深海裂隙與陸地/淺海之間的秩序維護。</p>
+  <h2>文化</h2>
+  <p>相較於<a class="wl" href="#race-sirens">海妖</a>以歌聲為核心的和諧文化,水精靈更務實、重視規則與邊界的明確劃分,
+  是深海裂隙對外事務的實際執行者。</p>
+  <h2>外貌</h2>
+  <p>半透明的水藍色軀體,能隨周遭水流改變形態的邊界輪廓,擅長長時間潛伏於暗流之中巡邏。</p>
+  <h2>對外關係</h2>
+  <p>與歌詠議會權力共享,分工明確,鮮少衝突,詳見<a class="wl" href="#nation-tidewatch">潮汐議會</a>。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#深海裂隙</span><span class="tag">#潮汐議會</span><span class="tag">#海妖</span>
+  </div>
+  `
+},
+'race-crystalwing':{
+  title:'晶翼蝶女', category:'種族', domain:'trench', tags:['種族','深海裂隙','燈籠淺礁站','貿易'],
+  alt:'Crystalwing Moth-Women',
+  infobox:{'棲地':'<a class="wl" href="#minor-factions">燈籠淺礁站</a>(深淺海交界)','政治實體':'前哨貿易站','職能':'對外貿易窗口'},
+  body:`
+  <p>晶翼蝶女是<a class="wl" href="#domain-trench">深海裂隙</a>較晚被記載的種族,棲息於深海與淺海交界處,建立
+  <a class="wl" href="#minor-factions">燈籠淺礁站</a>,是深海裂隙對外交流的實質窗口。</p>
+  <h2>外貌</h2>
+  <p>半透明的晶翅膀能在深海與淺海不同水壓環境中自由伸縮調節,翅面帶有類似深海燈籠魚的發光紋路,用於溝通與威嚇掠食者。</p>
+  <h2>文化與職能</h2>
+  <p>因棲地介於深淺海之間,晶翼蝶女發展出獨特的「雙棲」生活智慧,既熟悉深海裂隙的規矩,也了解淺海與陸地商人的貿易習慣,
+  是<a class="wl" href="#economy">經濟與貿易</a>中深海產品外銷的關鍵中介者。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#深海裂隙</span><span class="tag">#燈籠淺礁站</span><span class="tag">#經濟與貿易</span>
+  </div>
+  `
+},
+
+/* ---------------- 魔法與循環 ---------------- */
+'magic-system':{
+  title:'魔力循環系統', category:'魔法與循環', domain:null, tags:['魔法','世界樹','循環'],
+  alt:'The Five-Stage Circulation',
+  infobox:{'核心':'<a class="wl" href="#creature-titan">世界樹 艾瑟瑞姆</a>','階段數':'五階段','年度現象':'魔力潮汐','週期現象':'世界樹開花季(7年)'},
+  body:`
+  <p>艾瑟瑞亞的一切魔法均源自貫穿全大陸的五階段魔力循環,由世界樹<a class="wl" href="#creature-titan">艾瑟瑞姆</a>作為心臟驅動。</p>
+
+  <h2>五階段循環</h2>
+  <h3>階段一:吸收 (Absorption)</h3>
+  <p>世界樹根系深入五大域,吸收原始魔力(火、月光、暗影、夢境、水)。</p>
+  <h3>階段二:轉化 (Conversion)</h3>
+  <p>中央晶核將五種魔力融合為「純淨以太魔力」,過程會產生「魔力果實」——大陸上最珍貴的資源。</p>
+  <h3>階段三:分配 (Distribution)</h3>
+  <p>通過「魔力脈絡」(發光的樹根與浮空河流)輸送至各域。魔力濃度越高,生物性慾越強。</p>
+  <h3>階段四:淨化 (Purification)</h3>
+  <p>世界樹葉片會過濾「濁魔力」(戰爭、過度情慾、負面情緒),轉化為純淨能量。</p>
+  <h3>階段五:回饋 (Feedback)</h3>
+  <p>生物通過儀式、戰鬥與親密活動釋放的情慾魔力被根系吸收,形成閉環。</p>
+
+  <blockquote>關鍵平衡:若情慾魔力過低,大陸將進入「枯萎期」;若過高,則引發「狂亂期」——紀元2450的「<a class="wl" href="#history">月之狂亂</a>」
+  即為狂亂期失控的著名案例。</blockquote>
+
+  <h2>魔法分類</h2>
+  <ul>
+    <li><b>情慾系</b>(最普遍):通過親密接觸與情感連結發動,強度與情緒強度正相關。</li>
+    <li><b>元素系</b>:火(炙炎)、月光(月影)、暗影(深淵)、夢境(花海)、水(深海)。</li>
+    <li><b>共鳴系</b>:跨種族互動時最容易出現,可產生混合魔法效果。</li>
+  </ul>
+  <p>多數種族透過「實踐儀式」(結合冥想的傳統修煉)學習魔法,年輕個體學習速度最快。</p>
+
+  <h2>特殊現象</h2>
+  <ul>
+    <li><b>魔力潮汐</b>(每年一次):全大陸魔力提升300%,各種族進入繁殖高峰。</li>
+    <li><b>世界樹開花季</b>(每7年):世界樹開出巨大發光花朵,跨域遷徙達到頂峰,詳見<a class="wl" href="#migration">跨域遷徙路線</a>。</li>
+  </ul>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#世界樹</span><span class="tag">#魔力潮汐</span><span class="tag">#月之狂亂</span>
+  </div>
+  `
+},
+'migration':{
+  title:'跨域遷徙路線', category:'魔法與循環', domain:null, tags:['遷徙','季節','世界樹開花季'],
+  alt:'Seasonal Migration Routes',
+  body:`
+  <p>受<a class="wl" href="#magic-system">魔力循環系統</a>影響,艾瑟瑞亞的種族依季節形成規律的跨域遷徙路線。</p>
+
+  <table class="wiki-table">
+    <tr><th>季節</th><th>路線名稱</th><th>中心域</th><th>內容</th></tr>
+    <tr><td>春</td><td>覺醒之途</td><td><a class="wl" href="#domain-bloom">晶夢花海</a> → 全大陸</td><td><a class="wl" href="#race-bloomsprites">花精</a>、<a class="wl" href="#race-stardust">星塵龍女</a>、夢魔攜帶夢境花粉向外擴散</td></tr>
+    <tr><td>夏</td><td>火之誓約</td><td><a class="wl" href="#domain-ember">炙炎山脈</a>為中心</td><td><a class="wl" href="#race-dragonkin">龍女</a>、炎狐向外遷徙,舉行「火之交融」儀式</td></tr>
+    <tr><td>秋</td><td>月之狂獵</td><td><a class="wl" href="#domain-lunar">月影古林</a>為中心</td><td><a class="wl" href="#race-lunarfang">狼女</a>、血狐、月光精靈大規模遷徙,尋找跨域伴侶</td></tr>
+    <tr><td>冬</td><td>深淵冬眠</td><td><a class="wl" href="#domain-abyss">永夜深淵</a> + <a class="wl" href="#domain-trench">深海裂隙</a></td><td>黑暗精靈、<a class="wl" href="#race-lilith">魅魔</a>、<a class="wl" href="#race-sirens">海妖</a>回歸地下與深海,儲備能量</td></tr>
+    <tr><td>每7年</td><td>世界樹開花季</td><td><a class="wl" href="#creature-titan">世界樹</a></td><td>全大陸生物向中央遷徙,形成大陸級盛會</td></tr>
+  </table>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#魔力循環</span><span class="tag">#火月之路</span><span class="tag">#夢淵之路</span>
+  </div>
+  `
+},
+
+/* ---------------- 歷史 ---------------- */
+'pathfinders-hold':{
+  title:'拓境城', category:'地理與政治', domain:null, tags:['人族','雲隙荒境','拼接建築','拓境行會聯合'],
+  alt:"Pathfinder's Hold · 拓境者的家",
+  infobox:{'位置':'<a class="wl" href="#unclaimed-territories">雲隙荒境</a>中心','建立者':'<a class="wl" href="#notable-figures">凱恩·灰旅</a>','建築風格':'拼接建築(Patchwork Architecture)','人口組成':'以<a class="wl" href="#race-human">人族</a>為主,兼容各族流浪者'},
+  body:`
+  <p>拓境城(Pathfinder's Hold)座落於<a class="wl" href="#unclaimed-territories">雲隙荒境</a>中心,是<a class="wl" href="#race-human">人族</a>
+  墜入艾瑟瑞亞後建立的第一座、也是唯一一座正式聚落,如今是<b>拓境行會聯合</b>的總部所在。與五大生態域那些「由魔力自然生長而成」的
+  建築截然不同,拓境城是一座徹頭徹尾靠雙手一磚一瓦「蓋」出來的城市。</p>
+
+  <h2>環境</h2>
+  <p>雲隙荒境本身是介於<a class="wl" href="#domain-ember">炙炎山脈</a>與<a class="wl" href="#domain-lunar">月影古林</a>之間的破碎浮空礫石帶,
+  地貌破碎、資源匱乏,終年壟罩在雲海濕氣與碎裂浮島的陰影之下。拓境城便建於此地最大、最穩固的一塊浮空礁岩之上,四周散布著
+  歷代雲海渡口失事的殘骸——這些殘骸後來反倒成了拓境城最主要的建材來源。</p>
+
+  <h2>建築:拼接建築 (Patchwork Architecture)</h2>
+  <p>由於沒有任何原生元素親和力可以「引導」建材生長,人族只能因地制宜、就地取材,將五域各自的建築工法拼湊挪用——
+  牆體常見熔鑄黑曜石殘塊與珊瑚防水塗層混用,屋頂則援用月影古林式的活木塑形殘枝作骨架,再覆上打撈自雲舟殘骸的金屬板。
+  這種毫無「純粹」可言的混搭風格,反而成了人族引以為傲的美學:每一棟建築都是一部濃縮的跨域貿易史。</p>
+
+  <h3>代表建物</h3>
+  <ul>
+    <li><b>拓境集會所</b>——拓境行會聯合的議事與行政中心,外觀由五種材質拼接而成,是全城最大的建築。</li>
+    <li><b>羅盤塔(Compass Tower)</b>——收藏<a class="wl" href="#legendary-artifacts">拓境羅盤</a>原件的高塔,同時也是航道規劃與雲舟調度中心。</li>
+    <li><b>破帆廣場</b>——以歷代雲海渡口失事雲舟的殘破船帆搭建頂棚的中央市集廣場,五域商品在此交易流通。</li>
+    <li><b>灰旅紀念柱</b>——紀念創城者<a class="wl" href="#notable-figures">凱恩·灰旅</a>的石柱,柱身刻有最初抵達此地的年份與傳說中三種起源說法的簡短銘文。</li>
+  </ul>
+
+  <h2>居民組成</h2>
+  <p>拓境城雖以人族為主體,卻是全大陸種族組成最混雜的聚落——舉凡在原生政體中因階級、信仰或血統而遭邊緣化的個體
+  (例如不受<a class="wl" href="#race-lilith">魅魔</a>階級制度青睞的低階學徒、拒絕遵循<a class="wl" href="#race-lunarfang">狼女</a>
+  部落傳統的年輕戰士),都可能輾轉流落至此,使拓境城逐漸發展出一種「不問出身、只看本事」的邊境城鎮文化,
+  也讓它成為五域眼中「規矩最少、最難掌控」的地方。</p>
+
+  <h2>行會結構</h2>
+  <p><b>拓境行會聯合</b>下轄三大子公會:<b>商隊行會</b>(管理跨域雲舟貿易)、<b>工匠公會</b>(負責拼接建築的營造與拓境羅盤的量產)、
+  <b>嚮導公會</b>(培訓熟悉<a class="wl" href="#transit-network">大陸交通網絡</a>三種路徑的領航員與外交隨行人員)。三會共同推舉現任會長
+  <a class="wl" href="#notable-figures">艾莉諾·拓境</a>統籌對外事務。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#人族</span><span class="tag">#雲隙荒境</span><span class="tag">#拓境羅盤</span><span class="tag">#凱恩灰旅</span>
+  </div>
+  `
+},
+
+/* ---------------- 地理與政治 ---------------- */
+'diplomatic-relations':{
+  title:'外交關係總表', category:'地理與政治', domain:null, tags:['外交','關係','同盟','衝突'],
+  alt:'The Web of Alliances & Tensions',
+  body:`
+  <p>各政體的雙邊關係散落在各自頁面中,本頁彙整成一張總表,方便一次掌握誰與誰結盟、誰與誰緊張。</p>
+
+  <table class="wiki-table">
+    <tr><th>政體A</th><th>政體B</th><th>關係</th><th>說明</th></tr>
+    <tr><td><a class="wl" href="#nation-pyraxis">熔焰王國</a></td><td><a class="wl" href="#nation-kindling">焰狐盟</a></td><td>盟友</td><td>世代結盟,火之誓約傳統的延續</td></tr>
+    <tr><td><a class="wl" href="#nation-pyraxis">熔焰王國</a></td><td><a class="wl" href="#nation-lunarfang">月伏部落聯盟</a></td><td>謹慎夥伴</td><td>火月之路貿易,偶因晶礦採集權起摩擦</td></tr>
+    <tr><td><a class="wl" href="#nation-pyraxis">熔焰王國</a></td><td><a class="wl" href="#nation-covenant">契約王朝</a></td><td>務實但戒備</td><td>無正式衝突,但缺乏深度互信</td></tr>
+    <tr><td><a class="wl" href="#nation-pyraxis">熔焰王國</a></td><td><a class="wl" href="#nation-umbral">黑淵母邦</a></td><td>疏遠</td><td>鮮少往來,無正式外交管道</td></tr>
+    <tr><td><a class="wl" href="#nation-lunarfang">月伏部落聯盟</a></td><td><a class="wl" href="#nation-dreamsilk">夢絲城</a></td><td>盟友</td><td>互利貿易(皮草/鹿角 換 情報/工藝)</td></tr>
+    <tr><td><a class="wl" href="#nation-lunarfang">月伏部落聯盟</a></td><td><a class="wl" href="#minor-factions">荒血部</a></td><td>低烈度衝突</td><td>領地與獵場糾紛,可追溯至部落整合初期</td></tr>
+    <tr><td><a class="wl" href="#nation-covenant">契約王朝</a></td><td><a class="wl" href="#nation-umbral">黑淵母邦</a></td><td>表面共治・暗中角力</td><td>共享永夜深淵統治權,實則爭奪回聲深坑等地標</td></tr>
+    <tr><td><a class="wl" href="#nation-covenant">契約王朝</a>+<a class="wl" href="#nation-umbral">黑淵母邦</a></td><td><a class="wl" href="#unclaimed-territories">影裔殘部</a></td><td>一致鎮壓</td><td>雙方少數能達成共識的立場</td></tr>
+    <tr><td><a class="wl" href="#nation-petalconcord">花瓣聯盟</a></td><td><a class="wl" href="#nation-rootreach">根都</a></td><td>密切</td><td>同域共治,共同守護世界樹周邊事務</td></tr>
+    <tr><td><a class="wl" href="#nation-starisles">十二星島盟</a></td><td>五域</td><td>中立調停</td><td>超然立場,常受邀作第三方仲裁</td></tr>
+    <tr><td><a class="wl" href="#nation-choral">歌詠議會</a></td><td><a class="wl" href="#nation-tidewatch">潮汐議會</a></td><td>高度和諧</td><td>權力共享,分工明確,鮮少衝突</td></tr>
+    <tr><td><a class="wl" href="#nation-rootreach">根都</a></td><td>全體政體</td><td>絕對中立</td><td>公認聖地,兼任跨域爭端仲裁者</td></tr>
+    <tr><td><a class="wl" href="#pathfinders-hold">拓境行會聯合</a></td><td>全體政體</td><td>有用但保留</td><td>各域普遍雇用其商隊,但黑淵母邦與部分保守狼女部落戒心較重</td></tr>
+  </table>
+
+  <h2>當前最大裂痕</h2>
+  <ul>
+    <li><b>黑淵母邦內部</b>——<a class="wl" href="#pantheon-faith">永夜真理教</a>與官方<a class="wl" href="#pantheon-faith">世界樹信仰</a>的正統/異端之爭尚未平息。</li>
+    <li><b>永夜深淵政治不穩</b>——<a class="wl" href="#unclaimed-territories">影裔殘部</a>持續盤據未圖之境,是唯一未被任何政體實際控制的敵對勢力。</li>
+    <li><b>人族身分未定</b>——<a class="wl" href="#race-human">人族</a>雖被普遍雇用,卻始終未被完全接納為「艾瑟瑞亞原生」的一員。</li>
+  </ul>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#各國政體</span><span class="tag">#未歸屬地帶</span><span class="tag">#信仰體系</span>
+  </div>
+  `
+},
+'bestiary':{
+  title:'生物圖鑑', category:'地理與政治', domain:null, tags:['生物','食物鏈','圖鑑'],
+  alt:'Fauna of Aetheria',
+  body:`
+  <p>本頁彙整五域食物鏈中提及、但尚未單獨介紹的代表性生物。</p>
+
+  <h2><a class="wl" href="#domain-ember">炙炎山脈</a></h2>
+  <table class="wiki-table">
+    <tr><th>生物</th><th>食物鏈位階</th><th>特徵</th></tr>
+    <tr><td>焰翼蜂鳥</td><td>基礎</td><td>體型嬌小,雙翼振動頻率極高,能在熔岩氣流中懸停採蜜,<a class="wl" href="#race-emberfox">炎狐</a>畜養的主要對象</td></tr>
+    <tr><td>灰燼鳳蝶</td><td>中階</td><td>翅膀由類似灰燼的輕質鱗片構成,飛行時會留下短暫的火星軌跡</td></tr>
+    <tr><td>熔岩角獸</td><td>頂級掠食者(<a class="wl" href="#race-dragonkin">龍女</a>/炎狐之下)</td><td>體表覆蓋硬化熔岩殼,雙角能噴發高溫氣體驅敵</td></tr>
+  </table>
+
+  <h2><a class="wl" href="#domain-lunar">月影古林</a></h2>
+  <table class="wiki-table">
+    <tr><th>生物</th><th>食物鏈位階</th><th>特徵</th></tr>
+    <tr><td>月光植物</td><td>基礎</td><td>葉片會隨月相開合,吸收月光作為養分</td></tr>
+    <tr><td>月影鹿</td><td>初階</td><td>鹿角會隨季節反光變色,是<a class="wl" href="#race-lunarfang">狼女</a>儀式服的主要材料來源</td></tr>
+    <tr><td>夢織蛛</td><td>中階</td><td>吐出的蛛絲具備輕微致幻效果,與<a class="wl" href="#race-kitsune">狐女</a>共生建造夢織塔</td></tr>
+    <tr><td>銀月狼靈</td><td>半靈體</td><td>並非單純掠食者,而是被視為狼女祖靈的半靈體生物,詳見<a class="wl" href="#pantheon-faith">白狼之母信仰</a></td></tr>
+  </table>
+
+  <h2><a class="wl" href="#domain-abyss">永夜深淵</a></h2>
+  <table class="wiki-table">
+    <tr><th>生物</th><th>特徵</th></tr>
+    <tr><td>晶噬蠕蟲</td><td>以生長中的晶石為食,啃食後排出的殘渣反而是提煉暗影水晶的重要原料</td></tr>
+    <tr><td>影縛幽魂</td><td>由濁魔力凝結而成的半實體生物,行動時會暫時「綁住」周遭光源</td></tr>
+    <tr><td>深淵歌者</td><td>棲息於回聲深坑周邊,發出的低頻鳴叫是黑暗精靈判斷坑洞深度變化的天然警報</td></tr>
+  </table>
+
+  <h2><a class="wl" href="#domain-bloom">晶夢花海</a></h2>
+  <table class="wiki-table">
+    <tr><th>生物</th><th>特徵</th></tr>
+    <tr><td>幻光蝶群</td><td>成群飛行時會拼出短暫的光影圖案,<a class="wl" href="#race-bloomsprites">花精</a>常藉此占卜天氣</td></tr>
+    <tr><td>根脈古樹守護者</td><td>由世界樹根系分化出的樹人型生物,職責是守護晶夢花海邊界,與<a class="wl" href="#race-dryads">樹精</a>關係密切但並非同一物種</td></tr>
+    <tr><td>夢露花精</td><td>棲息於花瓣露珠中的微型精怪,並非<a class="wl" href="#race-bloomsprites">花精種族</a>本身,而是花精文化中常見的「自然精怪」意象</td></tr>
+  </table>
+
+  <h2><a class="wl" href="#domain-trench">深海裂隙</a></h2>
+  <table class="wiki-table">
+    <tr><th>生物</th><th>特徵</th></tr>
+    <tr><td>光歌鯨</td><td><a class="wl" href="#race-sirens">海妖</a>信仰核心,能發出跨越整片深海裂隙的歌聲,詳見<a class="wl" href="#pantheon-faith">信仰體系</a></td></tr>
+    <tr><td>晶棘海龍</td><td>背脊布滿晶石棘刺的中型海龍,性情溫和,常被<a class="wl" href="#race-watersprite">水精靈</a>馴養作為巡邏坐騎</td></tr>
+    <tr><td>深淵燈籠魚</td><td>棲息於深海最幽暗處,發光器官的圖案因個體而異,<a class="wl" href="#race-crystalwing">晶翼蝶女</a>常研究其發光模式應用於燈籠淺礁站的照明系統</td></tr>
+  </table>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#五大生態域</span><span class="tag">#傳奇生物</span>
+  </div>
+  `
+},
+
+/* ---------------- 神話與信仰 ---------------- */
+'creation-myth':{
+  title:'創世神話', category:'神話與信仰', domain:null, tags:['創世','神話','世界樹','太初'],
+  alt:'The First Chord · 太初之音',
+  infobox:{'時期':'紀元0以前(不可考)','核心概念':'太初二力、世界樹之夢','官方版本傳承者':'<a class="wl" href="#race-dryads">樹精</a>根都學院'},
+  body:`
+  <p>太初之時,無天無地,唯有「太虛」——絕對的空無。太虛之中沒有時間,沒有意識,只漂浮著兩股尚未成形的原始傾向。
+  這是艾瑟瑞亞最古老、也最難以驗證的一段敘事,卻是理解整座大陸魔力本質的關鍵。</p>
+
+  <h2>太初二力</h2>
+  <p>傳說太虛之中蘊藏著兩股彼此對立又彼此渴求的原始傾向:</p>
+  <ul>
+    <li><b>生潮(Life-Tide)</b>——不斷擴張、渴望存在、渴望被感知的衝動。</li>
+    <li><b>慾焰(Desire-Ember)</b>——渴望連結、渴望觸碰、渴望不再孤獨的衝動。</li>
+  </ul>
+  <p>兩者本無形無質,直到某個無法考據的剎那彼此共鳴、碰撞,發出「太初之音(The First Chord)」——已知最早的「存在」瞬間。
+  <a class="wl" href="#creature-titan">世界樹</a>的種子,便誕生於那道共鳴的餘燼之中。</p>
+
+  <h2>世界樹之夢</h2>
+  <p>種子在太虛中漂流無盡歲月,終於在雲海深處尋得立足之地,生根、抽芽,長成後來的艾瑟瑞姆。世界樹並非只是被動生長的植物——
+  傳說它在生長過程中作起了長夢,而夢中的每一個面向,都化作了實際存在的疆域:</p>
+  <ul>
+    <li>它夢見自身年輕時的狂熱與衝動,那份熾熱凝結成<a class="wl" href="#domain-ember">炙炎山脈</a>。</li>
+    <li>它夢見自己初次意識到「渴望」為何物時的悵然,那份悵然化為銀光,流淌成<a class="wl" href="#domain-lunar">月影古林</a>。</li>
+    <li>它夢見自己害怕孤獨、害怕被遺忘的暗面,那份恐懼沉澱成<a class="wl" href="#domain-abyss">永夜深淵</a>。</li>
+    <li>它夢見自己尚未實現、無數種可能的未來,那些幻想綻放成<a class="wl" href="#domain-bloom">晶夢花海</a>。</li>
+    <li>它夢見自己終於平靜下來、與萬物和解的心境,那份寧靜匯聚成<a class="wl" href="#domain-trench">深海裂隙</a>。</li>
+  </ul>
+
+  <h2>眾生的誕生</h2>
+  <p>世界樹並不願獨自作夢。祂將自身夢境的碎片賦予意識與形體,使之成為能在各自疆域中生活、思考、渴望的種族。這正是為何艾瑟瑞亞的
+  每個種族,天生便與<a class="wl" href="#magic-system">情慾與渴望的魔力</a>如此親近——他們本質上正是世界樹渴望本身的具象化,
+  而<a class="wl" href="#magic-system">魔力循環系統</a>的「回饋」階段,其實正是萬物將這份渴望歸還給作夢者的過程。</p>
+
+  <blockquote>「我們不是世界樹創造的僕從,我們是祂尚未做完的夢的一部分。」——根都學院古諺</blockquote>
+
+  <h2>眾說紛紜的異本</h2>
+  <p>雖然「世界樹之夢」是各域最普遍接受的官方版本,不同種族仍流傳著各自的異本創世神話,從未被證實或推翻,反而成為各族信仰差異、
+  乃至外交摩擦的深層根源之一:</p>
+  <ul>
+    <li><b><a class="wl" href="#race-dragonkin">龍女</a>異本</b>——相信泰坦古樹其實孵化自一顆墜落太虛的巨大火卵,五域不過是卵殼碎片落地後各自演化而成。</li>
+    <li><b><a class="wl" href="#race-lilith">魅魔</a>異本</b>——相信始祖<a class="wl" href="#creature-lilithshadow">莉莉絲之影</a>早於世界樹存在,是她以誘惑喚醒了沉睡的種子,
+    世界樹的第一次萌芽其實是回應她的呼喚。</li>
+    <li><b><a class="wl" href="#race-drow">黑暗精靈</a>異本</b>——主張光明只是暫時的意外,永夜才是太虛真正的本質,世界樹的誕生只是遲早會被黑暗重新吞沒的插曲。</li>
+  </ul>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#世界樹</span><span class="tag">#魔力循環</span><span class="tag">#創世之刻</span><span class="tag">#人族</span><span class="tag">#信仰體系</span>
+  </div>
+  `
+},
+'pantheon-faith':{
+  title:'信仰體系', category:'神話與信仰', domain:null, tags:['信仰','教團','異端','聖地'],
+  alt:'Faiths & Cults of Aetheria',
+  infobox:{'官方信仰':'世界樹信仰(泛大陸)','教廷/聖地':'<a class="wl" href="#unclaimed-territories">根都</a>','已知異端':'永夜真理教'},
+  body:`
+  <p>艾瑟瑞亞的信仰體系建立在<a class="wl" href="#creation-myth">創世神話</a>之上,以泛大陸共通的「世界樹信仰」為主流,
+  但各域仍各自發展出對在地傳奇生物的崇拜,甚至孕育出被視為異端的分支教派。</p>
+
+  <h2>世界樹信仰 (The Aetherium Faith)</h2>
+  <p>幾乎所有種族都以某種形式敬奉<a class="wl" href="#creature-titan">世界樹艾瑟瑞姆</a>,將其視為萬物魔力與生命的根源。
+  信仰的核心教義並非空談——<a class="wl" href="#magic-system">魔力循環系統</a>的五個階段本身就被當作神聖的儀軌:
+  「回饋」階段尤其被詮釋為信眾將自身的渴望與愛慾獻還給作夢者的神聖行為。</p>
+  <p>教團核心為<b>護根者(Rootwardens)</b>,以<a class="wl" href="#race-dryads">樹精</a>為主要成員,總部設於全大陸公認的中立聖地
+  <a class="wl" href="#unclaimed-territories">根都</a>。</p>
+  <p><b>信仰曆法</b>:每年一度的<a class="wl" href="#magic-system">魔力潮汐</a>對應年度慶典「潮盈節」;每七年一度的
+  <a class="wl" href="#magic-system">世界樹開花季</a>則是最神聖的朝聖盛會,全大陸信眾不分種族齊聚根都朝拜。</p>
+
+  <h2>各域在地信仰</h2>
+  <table class="wiki-table">
+    <tr><th>域</th><th>信仰對象</th><th>特色</th></tr>
+    <tr><td><a class="wl" href="#domain-ember">炙炎山脈</a></td><td><a class="wl" href="#creature-starfall">星滅龍王</a>信仰</td><td><a class="wl" href="#race-dragonkin">龍女</a>視其為天穹守護者,遠行與遷徙前必先祈願</td></tr>
+    <tr><td><a class="wl" href="#domain-lunar">月影古林</a></td><td>白狼之母信仰</td><td>對銀月狼靈的祖靈崇拜,「月之狂獵」途中會向其祈求指引</td></tr>
+    <tr><td><a class="wl" href="#domain-abyss">永夜深淵</a>(魅魔)</td><td>莉莉絲教團</td><td>對始祖<a class="wl" href="#creature-lilithshadow">莉莉絲之影</a>的直接崇拜,與王室世系高度重疊——女王即被視為莉莉絲意志的現世化身</td></tr>
+    <tr><td><a class="wl" href="#domain-abyss">永夜深淵</a>(黑暗精靈)</td><td>永夜真理教</td><td>主張永夜才是太虛本質,光明只是暫時意外,被護根者視為異端(詳見下方)</td></tr>
+    <tr><td><a class="wl" href="#domain-bloom">晶夢花海</a></td><td><a class="wl" href="#creature-dreamweaver">夢境織女</a>信仰</td><td>花精與樹精共同的夢境神諭傳統,以解讀夢兆聞名</td></tr>
+    <tr><td><a class="wl" href="#domain-trench">深海裂隙</a></td><td>光歌鯨/<a class="wl" href="#creature-abysssovereign">永眠海皇</a>信仰</td><td><a class="wl" href="#race-sirens">海妖</a>於光歌鯨神殿舉行歌詠祭儀</td></tr>
+  </table>
+
+  <h2>異端與宗教張力:永夜真理教</h2>
+  <p>永夜真理教承襲<a class="wl" href="#race-drow">黑暗精靈</a>創世異本的核心主張——永夜才是太虛真正的本質,世界樹的光明終將被黑暗重新吞沒。
+  此教派在黑淵母邦內部逐漸壯大,被根都護根者視為潛在威脅。部分學者甚至懷疑,紀元5890「<a class="wl" href="#history">影之叛亂</a>」
+  背後不僅是政治奪權,更是一場被真理教激進派煽動的宗教叛變——正統與異端的角力,至今仍是永夜深淵政治的暗流,
+  也讓<a class="wl" href="#unclaimed-territories">影裔殘部</a>的真實動機蒙上一層宗教陰影。</p>
+
+  <h2>當代預言</h2>
+  <blockquote>「當第八次開花之時,沉睡之影將甦醒,渴望終將決定選擇。」——根都護根者間流傳的未證實預言</blockquote>
+  <p>多數學者認為這只是對下一次<a class="wl" href="#magic-system">世界樹開花季</a>(約紀元6300前後)的模糊警示,
+  但也有人相信這暗指<a class="wl" href="#unclaimed-territories">影裔殘部</a>、<a class="wl" href="#legendary-artifacts">闇蝕之心</a>
+  或永夜真理教即將有所行動——這則預言尚未應驗,是「新生代」故事線中懸而未決的伏筆。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#創世神話</span><span class="tag">#根都</span><span class="tag">#永夜真理教</span><span class="tag">#影裔殘部</span>
+  </div>
+  `
+},
+
+history:{
+  title:'歷史大事記', category:'歷史', domain:null, tags:['歷史','紀元','時間軸'],
+  alt:'Chronicle of the Ages',
+  body:`
+  <p>艾瑟瑞亞的歷史以「紀元」計數,從創世之刻延續至今日的第6230紀元。</p>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-era">紀元 0</div><div class="tl-title">創世之刻</div><p>世界樹<a class="wl" href="#creature-titan">艾瑟瑞姆</a>從虛空中誕生,大陸浮上天空。完整緣由詳見<a class="wl" href="#creation-myth">創世神話</a>。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 850</div><div class="tl-title">第一次魔力崩壞</div><p>各域對魔力晶石的開採在此時達到頂峰,遠超世界樹的自然恢復速度,終致「枯萎災變」爆發,世界樹進入長達三百餘年的沉睡,
+    大陸<a class="wl" href="#magic-system">魔力循環</a>陷入長期紊亂。也正是在這段動盪期間,現實帷幕出現裂縫,<a class="wl" href="#race-human">人族</a>自此墜入艾瑟瑞亞,
+    成為大陸上最年輕的種族。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 1200</div><div class="tl-title">天穹之戰</div><p>世界樹沉睡導致的魔力外洩驚動了棲居雲海高處的天使族,雙方爆發艾瑟瑞亞史上首場跨界戰爭。龍族與天使族大戰,
+    龍血散落各地,形成多種混血種族,包括<a class="wl" href="#race-stardust">星塵龍女</a>一系的分化起源。完整戰役經過詳見
+    <a class="wl" href="#event-sky-war">天穹之戰</a>專頁。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 1450</div><div class="tl-title">黑淵母邦建立</div><p>開國暗后陰紗統一永夜深淵分散的黑暗精靈部族,建立<a class="wl" href="#nation-umbral">黑淵母邦</a>,
+    某種程度上是對莉莉絲降臨後契約王朝崛起的回應與制衡,完整世系詳見<a class="wl" href="#royal-lineages">王室譜系</a>。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 2450</div><div class="tl-title">月之狂亂</div><p>第一次大規模<a class="wl" href="#magic-system">魔力潮汐</a>失控,<a class="wl" href="#race-lunarfang">狼女</a>與
+    <a class="wl" href="#race-kitsune">狐女</a>進入長達三年的狂熱期,<a class="wl" href="#nation-lunarfang">月伏部落聯盟</a>幾乎因此瓦解,
+    最終在當時月牙首領的強力領導下重整秩序。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 2900</div><div class="tl-title">拓境行會獲正式承認</div><p><a class="wl" href="#race-human">人族</a>拓境行會聯合與各域簽訂通商特許,
+    首次獲得跨域承認為中立商業實體,自此<a class="wl" href="#pathfinders-hold">拓境城</a>的雲舟商隊得以合法穿梭於五域之間。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 3120</div><div class="tl-title">莉莉絲降臨</div><p><a class="wl" href="#creature-lilithshadow">魅魔始祖莉莉絲之影</a>現身於永夜深淵最幽暗處,
+    以無可抗拒的魅力與智慧收攏原本四散的「夜語者」,建立<a class="wl" href="#nation-covenant">契約王朝</a>與階級秩序。完整經過詳見
+    <a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>專頁。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 3780</div><div class="tl-title">大交融協定</div><p>五域代表在世界樹下簽訂具魔法強制力的和平協定,鍛造五域晶約為實體見證,開啟跨域貿易時代,
+    <a class="wl" href="#nation-rootreach">根都</a>自此確立為五域共同承認的中立聖地。完整經過詳見<a class="wl" href="#event-grand-concord">大交融協定</a>專頁,
+    貿易細節見<a class="wl" href="#economy">經濟與貿易</a>。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 4200</div><div class="tl-title">永夜真理教興起</div><p><a class="wl" href="#nation-umbral">黑淵母邦</a>內部異端教派「永夜真理教」逐漸壯大,
+    主張永夜才是太虛真正的本質,首次被<a class="wl" href="#pantheon-faith">護根者</a>列為觀察對象——這場醞釀近1700年的宗教運動,
+    最終在紀元5890釀成大禍。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 5120</div><div class="tl-title">第二次開花季</div><p>世界樹大規模開花,引發全大陸種族大遷徙與混血高峰,是繼創世以來規模最大的一次跨域盛會,
+    也讓<a class="wl" href="#pantheon-faith">世界樹信仰</a>的朝聖傳統更加鞏固。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 5890</div><div class="tl-title">影之叛亂</div><p>永夜真理教激進派串聯影魅,試圖闖入根都奪取世界樹之淚並以闇蝕之心引發大陸級枯萎期。
+    熔焰、契約、黑淵三大君主罕見聯合出兵鎮壓,但闇蝕之心最終下落不明。完整經過詳見<a class="wl" href="#event-shadow-rebellion">影之叛亂</a>專頁。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 6180</div><div class="tl-title">妃嵐即位</div><p><a class="wl" href="#nation-pyraxis">熔焰王朝</a>第38代女王妃嵐加冕即位,是「新生代」年輕統治者崛起的代表性事件,
+    完整世系詳見<a class="wl" href="#royal-lineages">王室譜系</a>。</p></div>
+    <div class="tl-item"><div class="tl-era">紀元 6230 · 當前</div><div class="tl-title">新生代</div><p>年輕混血種族崛起,傳統與革新衝突加劇,是故事現今所處的時代。<a class="wl" href="#unclaimed-territories">影裔殘部</a>盤據的
+    未圖之境,亦成為當代政治張力的主要來源。</p></div>
+  </div>
+  `
+},
+
+/* ---------------- 傳奇生物 ---------------- */
+'creature-titan':{
+  title:'泰坦古樹 艾瑟瑞姆', category:'傳奇生物', domain:null, tags:['傳奇生物','世界樹','守護者'],
+  alt:'Titan Worldroot · Aetherium',
+  infobox:{'生態位':'大陸守護者 / 活體生態系統','外觀':'主幹直徑逾3公里','能力':'世界脈動、根域連結、守護結界'},
+  body:`
+  <p>泰坦古樹(Titan Worldroot)即是世界樹艾瑟瑞姆本體的守護化身,是艾瑟瑞亞大陸<a class="wl" href="#magic-system">魔力循環系統</a>的心臟,
+  也是整座浮空大陸得以存在的根本原因。</p>
+  <h2>外觀</h2>
+  <p>主幹直徑超過3公里,根系形成天然洞穴與浮空島,葉片發出淡金色光芒。</p>
+  <h2>能力</h2>
+  <ul>
+    <li><b>世界脈動</b>——調節全大陸魔力</li>
+    <li><b>根域連結</b>——與接觸者共享魔力</li>
+    <li><b>守護結界</b>——危機時展開大陸級防護</li>
+  </ul>
+  <h2>習性</h2>
+  <p>極少移動,但根系會緩慢生長。每年會「流淚」(魔力樹液),被<a class="wl" href="#race-dryads">樹精</a>等種族視為聖物。</p>
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#魔力循環</span><span class="tag">#樹精</span><span class="tag">#創世之刻</span>
+  </div>
+  `
+},
+'creature-starfall':{
+  title:'星滅龍王', category:'傳奇生物', domain:'ember', tags:['傳奇生物','天穹','龍族','天穹之戰'],
+  alt:'Starfall Dragon Sovereign',
+  infobox:{'生態位':'天穹巨龍','能力':'召喚流星雨、操控天象','現況':'天穹之戰後未再現身'},
+  body:`
+  <p>星滅龍王是盤踞於天穹最深處的巨龍,通體覆蓋著彷彿凝結星光的鱗片,雙翼展開時可覆蓋半座山峰的天空,雙眼如同兩顆恆星,
+  終年散發微光。傳說牠一聲低吼便能撕裂雲層,召喚流星雨、操控天象。</p>
+
+  <h2>天穹之戰中的現身</h2>
+  <p><a class="wl" href="#event-sky-war">天穹之戰</a>期間,面對天使族壓境,星滅龍王自天穹最深處現身,力抗天使先鋒,
+  為初代熔焰女王伊格妮絲爭取到反擊的關鍵時間。戰後牠並未如伊格妮絲那樣接受推崇、建立政體,而是重新隱沒於天際,鮮少現身。</p>
+
+  <h2>與星塵龍女的關聯</h2>
+  <p>部分學者認為,戰役中星滅龍王灑落的血脈,正是<a class="wl" href="#race-stardust">星塵龍女</a>誕生的真正源頭,
+  比起單純的「龍血散落各地」更為直接——<a class="wl" href="#nation-starisles">十二星島盟</a>至今仍視星滅龍王為始祖圖騰,
+  而非單純的信仰對象。</p>
+
+  <h2>信仰</h2>
+  <p><a class="wl" href="#race-dragonkin">龍女</a>視其為天穹守護者,遠行與遷徙前必先祈願,詳見<a class="wl" href="#pantheon-faith">信仰體系</a>。</p>
+
+  <h2>現況</h2>
+  <p>自天穹之戰後再未有確切目擊記錄,是否仍存在、抑或已化為星辰本身,是艾瑟瑞亞天文學界長年爭論不休的謎題。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#天穹之戰</span><span class="tag">#龍女</span><span class="tag">#十二星島盟</span>
+  </div>
+  `
+},
+'creature-lilithshadow':{
+  title:'莉莉絲之影', category:'傳奇生物', domain:'abyss', tags:['傳奇生物','永夜深淵','魅魔始祖'],
+  alt:"Lilith's Shadow",
+  infobox:{'生態位':'魅魔始祖','能力':'大範圍情慾操縱','現況':'退隱,傳說仍隱隱指引契約王朝'},
+  body:`
+  <p>莉莉絲之影從未以固定形貌示人——傳說中她時而化作優雅的成熟女性身影,時而僅以流動的陰影與呢喃低語現身,
+  沒有魅魔曾聲稱見過她「真正」的樣貌。她具備大範圍情慾操縱能力,據信其意志至今仍透過歷代莉莉絲女王的血脈與
+  <a class="wl" href="#legendary-artifacts">始祖契約書</a>隱隱運作。</p>
+
+  <h2>起源與降臨</h2>
+  <p>完整降臨經過詳見<a class="wl" href="#event-lilith-advent">莉莉絲降臨</a>專頁——她自稱源於太虛本身,早於世界樹之夢的種族
+  誕生便已存在,這也是<a class="wl" href="#creation-myth">魅魔創世異本</a>的核心主張:世界樹的第一次萌芽,其實是回應她的呼喚。</p>
+
+  <h2>退隱</h2>
+  <p>建立<a class="wl" href="#nation-covenant">契約王朝</a>後,她逐漸退出檯面政務,由歷代「莉莉絲」女王代為統治,
+  但至今仍有魅魔聲稱在深淵最幽暗處感受到她的低語與指引——這也是契約王朝「攝政稱號」傳統得以延續數千年而不動搖的信仰基礎。</p>
+
+  <h2>信仰</h2>
+  <p>是<a class="wl" href="#pantheon-faith">莉莉絲教團</a>崇拜的核心對象,女王被視為她意志的現世化身,與王室世系高度重疊。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#莉莉絲降臨</span><span class="tag">#契約王朝</span><span class="tag">#始祖契約書</span><span class="tag">#信仰體系</span>
+  </div>
+  `
+},
+'creature-abysssovereign':{
+  title:'永眠海皇', category:'傳奇生物', domain:'trench', tags:['傳奇生物','深海裂隙','海龍'],
+  alt:'Eternal Abyss Sovereign',
+  infobox:{'生態位':'深海裂隙守護者','外觀':'巨大發光海龍','能力':'操控海流與記憶','現況':'未曾有全貌目擊記錄'},
+  body:`
+  <p>永眠海皇是一頭體型堪比深海裂隙本身的巨大發光海龍,鱗片透出幽藍光暈,傳說其眼中映照著大陸歷代生靈的記憶片段。
+  祂能操控海流,引導或平息深海裂隙的巨大暗流;傳說也能操控生物的記憶,使溺水者在臨終前看見畢生最珍視的畫面,
+  因此<a class="wl" href="#race-sirens">海妖</a>將祂視為「引路者」而非純粹的破壞力量。</p>
+
+  <h2>信仰與傳說</h2>
+  <p>海妖相信永眠海皇並非「沉睡」,而是選擇「永遠清醒地看顧」深海裂隙——<a class="wl" href="#domain-trench">光歌鯨神殿</a>的建造方位,
+  據說便是依照永眠海皇棲息地的方向而定。</p>
+
+  <h2>與光歌鯨的關係</h2>
+  <p>傳說<a class="wl" href="#legendary-artifacts">光歌鯨骨笛</a>所紀念的那頭自願擱淺的古老光歌鯨,正是永眠海皇座下最忠誠的信使,
+  其犧牲被視為向永眠海皇獻上的至高敬意,也是「海之合唱」儀式最原初的靈感來源。</p>
+
+  <h2>現況</h2>
+  <p>從未有海妖聲稱親眼見過永眠海皇全貌,僅偶爾在深海裂隙最深處感應到巨大暗流異動,被視為祂仍在守望的證明。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#深海裂隙</span><span class="tag">#海妖</span><span class="tag">#光歌鯨骨笛</span>
+  </div>
+  `
+},
+'creature-dreamweaver':{
+  title:'夢境織女', category:'傳奇生物', domain:'bloom', tags:['傳奇生物','晶夢花海','花精'],
+  alt:'Dreamweaver Matriarch',
+  infobox:{'生態位':'晶夢花海最古老的花精','能力':'掌管全大陸夢境網絡','現況':'隱居,透過「拾夢者」傳達訊息'},
+  body:`
+  <p>夢境織女沒有固定形體,現身時多呈現為由發光花粉與夢境絲綢交織而成的模糊人形輪廓,面容隨觀看者的夢境記憶而變化。
+  她掌管著全大陸的夢境網絡,能編織、修補甚至截斷生靈之間的夢境連結——據信<a class="wl" href="#race-bloomsprites">花精</a>
+  「露光壓紋」文字之所以能傳遞情感,正是因為書寫時借用了她所編織的夢境網絡。</p>
+
+  <h2>起源</h2>
+  <p>相傳她是花精一族最早學會與世界樹夢境對話的個體,年歲已不可考,是<a class="wl" href="#domain-bloom">晶夢花海</a>
+  最古老的存在之一,其存在甚至早於<a class="wl" href="#nation-petalconcord">花瓣聯盟</a>的建立。</p>
+
+  <h2>信仰與職能</h2>
+  <p><a class="wl" href="#race-bloomsprites">花精</a>與<a class="wl" href="#race-dryads">樹精</a>共同奉行的夢境神諭傳統以她為核心,
+  擅長解讀夢兆的祭司(多為花精)自稱為「拾夢者」,負責向她請示重大決策的預兆;部分<a class="wl" href="#race-human">夢魔</a>
+  也參與此信仰,自視為她在人間的耳目。</p>
+
+  <h2>現況</h2>
+  <p>據說她仍活躍於晶夢花海深處的某座隱蔽浮島,但從未在公開場合現身,僅透過拾夢者的夢境轉達訊息。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#晶夢花海</span><span class="tag">#花精</span><span class="tag">#信仰體系</span>
+  </div>
+  `
+},
+
+/* ---------------- 語言與經濟 ---------------- */
+language:{
+  title:'語言與文字系統', category:'語言與經濟', domain:null, tags:['語言','文字','命名慣例','詞根'],
+  alt:'Languages, Scripts & Naming Conventions',
+  body:`
+  <p>艾瑟瑞亞存在一種通用語,以及各種族各具特色的文字系統與命名慣例——後者甚至能從一個人名的音韻,粗略推斷其種族血統。</p>
+
+  <h2>通用語</h2>
+  <p><b>以太通用語(Aetherian Common)</b>——由世界樹魔力直接傳授,不經自然語言演化,因此沒有特定的語音偏好,較容易學習,
+  是跨域貿易與外交的共同語言。</p>
+
+  <h2>種族文字系統</h2>
+  <table class="wiki-table">
+    <tr><th>種族</th><th>文字名稱</th><th>特色</th></tr>
+    <tr><td><a class="wl" href="#race-dragonkin">龍族</a></td><td>火焰符文</td><td>刻在金屬或岩石上會微微發熱</td></tr>
+    <tr><td><a class="wl" href="#race-kitsune">狐族</a></td><td>幻夢卷軸文字</td><td>會隨閱讀者心情改變含義</td></tr>
+    <tr><td><a class="wl" href="#race-lunarfang">狼族</a></td><td>月影爪痕</td><td>以爪痕形式刻在樹皮或石頭上</td></tr>
+    <tr><td><a class="wl" href="#race-lilith">魅魔</a></td><td>慾望契約文</td><td>簽署後會產生輕微快感</td></tr>
+    <tr><td><a class="wl" href="#race-drow">黑暗精靈</a></td><td>晶石脈動文</td><td>需要魔力共鳴才能閱讀</td></tr>
+    <tr><td><a class="wl" href="#race-dryads">樹精</a></td><td>年輪文</td><td>刻於年輪之中,需砍開樹幹才能閱讀,僅施行於已故者</td></tr>
+    <tr><td><a class="wl" href="#race-bloomsprites">花精</a></td><td>露光壓紋</td><td>以晨露壓印於花瓣之上,須於一日內讀完,否則隨露水蒸發而消失</td></tr>
+    <tr><td><a class="wl" href="#race-stardust">星塵龍女</a></td><td>星軌刻紋</td><td>以水晶碎片排列出星座構型,非線性書寫,依「星形」而非行序閱讀</td></tr>
+    <tr><td><a class="wl" href="#race-sirens">海妖</a></td><td>聲紋語</td><td>無固定視覺文字,以「歌形」刻印於共鳴貝板,遇魔力觸碰會重播原聲</td></tr>
+    <tr><td><a class="wl" href="#race-human">人族</a></td><td>拓境速記</td><td>改編自以太通用語字母的簡化實用書寫系統,無神秘性質,純為貿易記帳與航道紀錄設計</td></tr>
+  </table>
+  <p><b>書寫媒介</b>:魔力水晶、發光樹葉、夢境絲綢、熔岩玻璃。</p>
+
+  <h2>命名慣例與詞根</h2>
+  <p>各種族的個人命名皆帶有鮮明的音韻特徵,通曉此道者往往能單憑名字的發音,推測出對方的種族與血統背景。</p>
+  <table class="wiki-table">
+    <tr><th>種族</th><th>語音特徵</th><th>常見詞根</th><th>詞根意涵</th><th>範例</th></tr>
+    <tr><td><a class="wl" href="#race-dragonkin">龍女</a></td><td>短促爆破音,母音開放響亮</td><td>Ign-/Igni- ・ Vyr- ・ Fey-</td><td>火焰 ・ 熾盛 ・ 輝耀</td><td>伊格妮絲(Ignis)・微拉(Vyra)・妃嵐(Feyla)</td></tr>
+    <tr><td><a class="wl" href="#race-lilith">魅魔</a></td><td>流音與齒擦音交織,柔和誘人</td><td>Lil-/Lith- ・ Ves-</td><td>起源/契約 ・ 夜色/誓言</td><td>莉莉絲(Lilith)・薇夏(Vesha)</td></tr>
+    <tr><td><a class="wl" href="#race-drow">黑暗精靈</a></td><td>硬子音叢,音節冷硬簡短</td><td>Umbr- ・ Cy-</td><td>陰影 ・ 寒晶</td><td>陰紗(Umbrys)・賽妮絲(Cyanessa)</td></tr>
+    <tr><td><a class="wl" href="#race-lunarfang">狼女</a></td><td>短音節,常以喉音或顫音收尾</td><td>Sil- ・ -via/-yia</td><td>銀色 ・ 狼嚎尾韻</td><td>希爾薇亞(Silvyia)</td></tr>
+    <tr><td><a class="wl" href="#race-bloomsprites">花精</a>/<a class="wl" href="#race-stardust">星塵龍女</a></td><td>開放母音,輕盈綿長</td><td>——(多以自然詩意稱號取代本名)</td><td>依季節、星象或花語命名</td><td>「春語」・「寒霜」</td></tr>
+    <tr><td><a class="wl" href="#race-sirens">海妖</a></td><td>流音(l/r)為主,音節綿延如水波</td><td>Cora- ・ -lie</td><td>珊瑚/回響尾韻</td><td>珂拉莉(Coralie)</td></tr>
+    <tr><td><a class="wl" href="#race-human">人族</a></td><td>無特定詞根規則,沿用故土平實命名習慣</td><td>常見以地貌、旅程或職業構成姓氏</td><td>如 Greytrail(灰旅)= 灰色的旅途</td><td>凱恩·灰旅(Kane Greytrail)・艾莉諾(Eleanor)</td></tr>
+  </table>
+  <p>此表亦可作為創作新角色時的命名參考——同一血統的角色名若遵循相同詞根規律,能強化種族辨識度與世界一致性。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#附錄總覽</span><span class="tag">#大陸曆法</span><span class="tag">#王室譜系</span>
+  </div>
+  `
+},
+economy:{
+  title:'經濟與貿易', category:'語言與經濟', domain:null, tags:['經濟','貿易','魔力結晶'],
+  alt:'Economy & Trade',
+  body:`
+  <p>艾瑟瑞亞的經濟體系建立在「魔力結晶」通貨與五域特產貿易之上,自紀元3780「<a class="wl" href="#history">大交融協定</a>」簽訂後進入
+  穩定的跨域貿易時代。</p>
+  <h2>通貨</h2>
+  <p><b>魔力結晶</b>——不同顏色代表不同屬性,是全大陸通用的交易媒介。</p>
+  <h2>主要貿易品</h2>
+  <table class="wiki-table">
+    <tr><th>生態域</th><th>貿易品</th></tr>
+    <tr><td><a class="wl" href="#domain-ember">炙炎山脈</a></td><td>火屬性晶石、熔岩金屬、焰翼蜂蜜</td></tr>
+    <tr><td><a class="wl" href="#domain-lunar">月影古林</a></td><td>月光絲、夢織蛛絲、月影鹿角</td></tr>
+    <tr><td><a class="wl" href="#domain-abyss">永夜深淵</a></td><td>暗影水晶、魅魔之吻精華</td></tr>
+    <tr><td><a class="wl" href="#domain-bloom">晶夢花海</a></td><td>夢境花粉、幻光蝶翼粉</td></tr>
+    <tr><td><a class="wl" href="#domain-trench">深海裂隙</a></td><td>深海珍珠、光歌鯨的歌聲水晶</td></tr>
+  </table>
+  <h2>著名貿易路線</h2>
+  <ul>
+    <li><b>火月之路</b>:<a class="wl" href="#domain-ember">炙炎山脈</a> ↔ <a class="wl" href="#domain-lunar">月影古林</a></li>
+    <li><b>夢淵之路</b>:<a class="wl" href="#domain-bloom">晶夢花海</a> ↔ <a class="wl" href="#domain-abyss">永夜深淵</a></li>
+  </ul>
+  `
+},
+
+/* ---------------- 地理與政治 ---------------- */
+'transit-network':{
+  title:'大陸交通網絡', category:'地理與政治', domain:null, tags:['地理','交通','雲海','貿易路線'],
+  alt:'Continental Transit Network',
+  body:`
+  <p>艾瑟瑞亞是浮空大陸,五大生態域之間並非單純陸路相連,而是依賴三種特殊交通方式往來,共同構成整座大陸的交通骨幹。</p>
+
+  <h2>三大交通方式</h2>
+  <h3>雲海渡口 (Cloudsea Crossings)</h3>
+  <p>部分域與域邊界懸浮於無盡雲海之上,居民以馴養的浮空生物(如焰翼蜂鳥的巨型近親、光歌鯨的表親「雲鯨」)牽引「雲舟」渡海往來,
+  是最普及的跨域交通方式。由於不受任何單一域魔力親和限制,<a class="wl" href="#race-human">人族</a>逐漸壟斷了大部分雲舟商隊的操作與維護工作。</p>
+  <h3>根域隧道 (Rootbound Tunnels)</h3>
+  <p>世界樹<a class="wl" href="#creature-titan">艾瑟瑞姆</a>根系延伸出的天然地下通道,連接<a class="wl" href="#domain-abyss">永夜深淵</a>
+  與其他域的地底部分,是最快速但最危險的路徑,需通過黑暗精靈或魅魔領地許可方可通行。</p>
+  <h3>天穹古道 (Skyward Old Roads)</h3>
+  <p>傳說由<a class="wl" href="#creature-starfall">星滅龍王</a>時代遺留的古老飛行航道,如今由<a class="wl" href="#race-stardust">星塵龍女</a>
+  與部分<a class="wl" href="#race-dragonkin">龍女</a>貴族維護,僅限有翼種族或乘騎飛龍者使用。</p>
+
+  <h2>已知具名貿易路線</h2>
+  <table class="wiki-table">
+    <tr><th>路線</th><th>連接域</th><th>主要交通方式</th></tr>
+    <tr><td>火月之路</td><td><a class="wl" href="#domain-ember">炙炎山脈</a> ↔ <a class="wl" href="#domain-lunar">月影古林</a></td><td>雲海渡口</td></tr>
+    <tr><td>夢淵之路</td><td><a class="wl" href="#domain-bloom">晶夢花海</a> ↔ <a class="wl" href="#domain-abyss">永夜深淵</a></td><td>根域隧道,由夢境邊境守望者巡守</td></tr>
+  </table>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#世界樹</span><span class="tag">#經濟與貿易</span><span class="tag">#未歸屬地帶</span>
+  </div>
+  `
+},
+'unclaimed-territories':{
+  title:'未歸屬地帶', category:'地理與政治', domain:null, tags:['地理','邊境','影裔殘部'],
+  alt:'Unclaimed Territories',
+  body:`
+  <p>並非艾瑟瑞亞全境都被五大政體所轄。域與域交界處存在大片「未歸屬地帶」,是走私者、流亡者與傳說生物的棲身之所,
+  也是當前紀元「新生代」政治不穩定的主要源頭。</p>
+
+  <h2>雲隙荒境 (Cloudrift Wastes)</h2>
+  <p>介於<a class="wl" href="#domain-ember">炙炎山脈</a>與<a class="wl" href="#domain-lunar">月影古林</a>之間的破碎浮空礫石帶,
+  常見雲海渡口失事的殘骸,亦是荒血部與流亡龍族偶爾藏匿之處。紀元850前後,<a class="wl" href="#race-human">人族</a>墜入此地並落地生根,
+  於此建立起大陸上唯一由人族主導的據點——<a class="wl" href="#pathfinders-hold">拓境城(Pathfinder's Hold)</a>,如今是
+  <b>拓境行會聯合</b>的總部所在。</p>
+
+  <h2>未圖之境</h2>
+  <p><a class="wl" href="#domain-abyss">永夜深淵</a>回聲深坑以下的未知領域,官方地圖上刻意留白。傳說中,紀元5890「
+  <a class="wl" href="#history">影之叛亂</a>」失敗後倖存的<b>影裔殘部</b>真正據點便藏匿於此,是契約王朝與黑淵母邦少數
+  能達成一致立場的共同威脅。</p>
+
+  <div class="see-also">
+    <div class="see-also-title">另見</div>
+    <span class="tag">#影之叛亂</span><span class="tag">#永夜深淵</span><span class="tag">#大陸交通網絡</span>
+  </div>
+  `
+},
+
+};
+
+/* ============================================================
+   NAVIGATION TREE
+   ============================================================ */
+const NAV_ORDER = [
+  {name:'總覽', ids:['home']},
+  {name:'五大生態域', ids:['domain-ember','domain-lunar','domain-abyss','domain-bloom','domain-trench']},
+  {name:'地理與政治', ids:['transit-network','unclaimed-territories','pathfinders-hold','diplomatic-relations','bestiary']},
+  {name:'神話與信仰', ids:['creation-myth','pantheon-faith']},
+  {name:'人物與譜系', ids:['royal-lineages','notable-figures']},
+  {name:'重大歷史事件', ids:['event-sky-war','event-lilith-advent','event-grand-concord','event-shadow-rebellion']},
+  {name:'各國政體', ids:['nation-pyraxis','nation-kindling','nation-lunarfang','nation-dreamsilk','nation-covenant','nation-umbral','nation-petalconcord','nation-rootreach','nation-starisles','nation-choral','nation-tidewatch','minor-factions']},
+  {name:'神器與遺物', ids:['legendary-artifacts']},
+  {name:'種族', ids:['race-dragonkin','race-emberfox','race-kitsune','race-lunarfang','race-bloodfangfox','race-moonsprite','race-lilith','race-drow','race-shadowkin','race-sirens','race-watersprite','race-crystalwing','race-stardust','race-bloomsprites','race-dryads','race-dreamdemon','race-human']},
+  {name:'魔法與循環', ids:['magic-system','migration']},
+  {name:'歷史', ids:['history']},
+  {name:'傳奇生物', ids:['creature-titan','creature-starfall','creature-lilithshadow','creature-abysssovereign','creature-dreamweaver']},
+  {name:'語言與經濟', ids:['language','economy']},
+  {name:'附錄', ids:['appendix-overview','calendar']},
+  {name:'衍生故事', ids:['flagship-saga','saga-part1','saga-part2','saga-part3']},
+  {name:'戰役與對決', ids:['battle-ambush','battle-rootreach','battle-worldtree']},
+  {name:'角色誌', ids:['char-reya','char-vygan','char-syra','char-vero','char-nyle','char-relationships','char-grien','char-hodgan','char-vannis','char-ashmother','char-grayspeaker','char-ignis','char-vyra','char-camilla','char-feyla','char-lilith1','char-lilith3','char-lilith5','char-vesha','char-umbrys','char-cyanessa','char-frost','char-springwhisper','char-coralie','char-kane','char-ashflame','char-silvyia','char-fuyue','char-silan','char-eleanor','char-glenn','char-daria','char-lyien']},
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function buildNav(activeId){
+  let html = '';
+  NAV_ORDER.forEach(group=>{
+    html += `<div class="nav-group"><div class="nav-group-title">${group.name}</div>`;
+    group.ids.forEach(id=>{
+      const p = PAGES[id];
+      const dotColor = p.domain ? `background:${DOMAIN_COLOR[p.domain]}` : '';
+      html += `<div class="nav-link${id===activeId?' active':''}" onclick="location.hash='${id}'">
+        <span class="dot" style="${dotColor}"></span>${p.title}
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  return html;
+}
+
+function buildInfobox(p){
+  if(!p.infobox) return '';
+  let rows = '';
+  for(const [label,val] of Object.entries(p.infobox)){
+    rows += `<div class="infobox-row"><div class="infobox-label">${label}</div><div class="infobox-value">${val}</div></div>`;
+  }
+  return `<div class="infobox"><div class="infobox-head">${p.title}</div>${rows}</div>`;
+}
+
+function renderPage(id){
+  const p = PAGES[id] || PAGES.home;
+  const realId = PAGES[id] ? id : 'home';
+  const color = DOMAIN_COLOR[p.domain] || 'var(--gold)';
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-eyebrow" style="--domain-color:${color}">${p.category}</div>
+    <h1 class="page-title" style="--domain-color:${color}">${p.title}</h1>
+    ${p.alt ? `<div class="page-alt">${p.alt}</div>` : ''}
+    ${buildInfobox(p)}
+    <article style="--domain-color:${color}">${p.body}</article>
+  `;
+  document.getElementById('topbar').innerHTML = `艾瑟瑞亞百科 <span style="color:var(--ink-dim)">/</span> ${p.category} <span style="color:var(--ink-dim)">/</span> <a href="#${realId}">${p.title}</a>`;
+  document.getElementById('nav-tree').innerHTML = buildNav(realId);
+  window.scrollTo(0,0);
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function routeFromHash(){
+  const id = location.hash.slice(1) || 'home';
+  renderPage(id);
+}
+window.addEventListener('hashchange', routeFromHash);
+window.addEventListener('DOMContentLoaded', routeFromHash);
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  if(!q){ searchResults.classList.remove('show'); searchResults.innerHTML=''; return; }
+  const matches = Object.entries(PAGES).filter(([id,p])=>{
+    return p.title.toLowerCase().includes(q) || (p.tags||[]).some(t=>t.toLowerCase().includes(q)) || (p.alt||'').toLowerCase().includes(q);
+  }).slice(0,10);
+  if(matches.length===0){
+    searchResults.innerHTML = `<div class="sr-item" style="color:var(--ink-dim)">找不到符合的詞條</div>`;
+  } else {
+    searchResults.innerHTML = matches.map(([id,p])=>`
+      <div class="sr-item" onclick="location.hash='${id}'; searchInput_clear()">${p.title}<small>${p.category}</small></div>
+    `).join('');
+  }
+  searchResults.classList.add('show');
+});
+function searchInput_clear(){ searchInput.value=''; searchResults.classList.remove('show'); }
+document.addEventListener('click', (e)=>{
+  if(!document.getElementById('search-box').contains(e.target)){ searchResults.classList.remove('show'); }
+});
+</script>
+</body>
+</html>
